@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/style/product-detail.css">
+    <link rel="stylesheet" href="/style/footer.css">
+    <link rel="stylesheet" href="/style/header.css">
+    <link rel="icon" type="image/x-icon" href="/image/logo/favicon.png">
+
+</head>
+
+<body>
+    <!-- Header -->
+    <%- include('header') %>
+
+        <div class="container">
+            <!-- Product Section -->
+            <div class="product-section">
+                <!-- Main Image -->
+                <div class="image-gallery">
+                    <div class="main-image">
+                        <img id="mainImage" src="<%= product.mainImage %>" alt="<%= product.name %>">
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info">
+                    <div class="product-header">
+                        <h1 class="product-title">
+                            <%= product.name %>
+                        </h1>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="rating-text">4.5 (128 đánh giá)</span>
+                        </div>
+                    </div>
+
+                    <div class="price-section">
+                        <div class="price-group">
+                            <span class="current-price">₫<%= (product.price || 0).toLocaleString('vi-VN') %></span>
+                            <% if (product.oldPrice && product.oldPrice> 0) { %>
+                                <span class="original-price">₫<%= product.oldPrice.toLocaleString('vi-VN') %></span>
+                                <span class="discount-badge">-%<%= Math.round(((product.oldPrice - product.price) /
+                                        product.oldPrice * 100)) %></span>
+                                <% } %>
+                        </div>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-box"></i>
+                            <div>
+                                <div class="info-label">Tình trạng</div>
+                                <div class="info-value">Còn hàng</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-truck"></i>
+                            <div>
+                                <div class="info-label">Vận chuyển</div>
+                                <div class="info-value">Miễn phí</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <div class="info-label">Bảo hành</div>
+                                <div class="info-value">12 tháng</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="options-section">
+                        <div class="option-group">
+                            <label class="option-label">Số lượng:</label>
+                            <div class="quantity-selector">
+                                <button class="qty-btn" onclick="decreaseQty()">−</button>
+                                <input type="number" id="quantity" value="1" min="1" max="<%= product.stock || 10 %>"
+                                    readonly>
+                                <button class="qty-btn" onclick="increaseQty()">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="addToCart('<%= product._id %>')">
+                            <i class="fas fa-shopping-cart"></i>
+                            Thêm vào giỏ hàng
+                        </button>
+                        <button class="btn btn-secondary" onclick="buyNow('<%= product._id %>')">
+                            Mua ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Details Tabs -->
+            <div class="details-section">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('description')">Mô tả sản phẩm</button>
+                    <button class="tab-btn" onclick="switchTab('specs')">Thông số kỹ thuật</button>
+                    <button class="tab-btn" onclick="switchTab('reviews')">Đánh giá</button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="description" class="tab-panel active">
+                        <h2>Mô tả sản phẩm</h2>
+                        <p>
+                            <%= product.description
+                                || 'Xe đạp trẻ em cao cấp được thiết kế đặc biệt cho bé từ 2-5 tuổi, với khung xe chắc chắn và an toàn tuyệt đối.'
+                                %>
+                        </p>
+                        <!-- Nội dung mô tả khác -->
+                    </div>
+                    <!-- Các tab khác giữ nguyên -->
+                    <div id="specs" class="tab-panel">
+                        <!-- Nội dung specs giữ nguyên -->
+                        <p>Thông số kỹ thuật đang cập nhật...</p>
+                    </div>
+                    <div id="reviews" class="tab-panel">
+                        <!-- Nội dung reviews giữ nguyên -->
+                        <p>Chưa có đánh giá nào.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Products -->
+            <div class="related-section">
+                <h2>Sản phẩm liên quan</h2>
+                <div class="related-grid">
+                    <% if (relatedProducts && relatedProducts.length> 0) { %>
+                        <% relatedProducts.forEach(related=> { %>
+                            <div class="product-card"
+                                onclick="window.location.href='/product-detail/<%= related._id %>'"
+                                style="cursor: pointer;">
+                                <img src="<%= related.mainImage %>" alt="<%= related.name %>">
+                                <h3>
+                                    <%= related.name %>
+                                </h3>
+                                <div class="card-price">₫<%= (related.price || 0).toLocaleString('vi-VN') %>
+                                </div>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <p>Không có sản phẩm liên quan.</p>
+                                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <!-- (Nội dung footer giữ nguyên như file cũ) -->
+            <div class="footer-bottom">
+                <p>© 2024 Xe Đạp Beru Bike</p>
+            </div>
+        </footer>
+
+        <script>
+            // Change main image
+            function changeImage(imageSrc, element) {
+                const mainImage = document.getElementById("mainImage")
+                mainImage.src = imageSrc
+                document.querySelectorAll(".thumbnail").forEach((thumb) => thumb.classList.remove("active"))
+                element.classList.add("active")
+            }
+
+            // Quantity controls
+            function increaseQty() {
+                const input = document.getElementById("quantity")
+                const currentValue = Number.parseInt(input.value)
+                const maxValue = Number.parseInt(input.max)
+                if (currentValue < maxValue) input.value = currentValue + 1
+            }
+
+            function decreaseQty() {
+                const input = document.getElementById("quantity")
+                const currentValue = Number.parseInt(input.value)
+                const minValue = Number.parseInt(input.min)
+                if (currentValue > minValue) input.value = currentValue - 1
+            }
+
+            // Tab switching
+            function switchTab(tabName) {
+                document.querySelectorAll(".tab-panel").forEach((panel) => panel.classList.remove("active"))
+                document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"))
+                document.getElementById(tabName).classList.add("active")
+                event.target.classList.add("active")
+            }
+
+            // Chuyển trang chi tiết
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('.related-grid .product-card').forEach(card => {
+                    card.addEventListener('click', function () {
+                        const id = this.dataset.id || this.querySelector('a')?.href.split('/').pop() || '<%= product._id %>';
+                        // Logic lấy ID này chỉ mang tính fallback, tốt nhất related items nên có thẻ a hoặc data-id chuẩn
+                    });
+                });
+            });
+
+            // [QUAN TRỌNG] Hàm thêm vào giỏ hàng (Đã fix ID cập nhật badge)
+            async function addToCart(productId) {
+                const quantity = parseInt(document.getElementById('quantity').value);
+                const button = event.target;
+                const originalText = button.innerHTML;
+
+                if (quantity < 1) {
+                    alert('Số lượng phải lớn hơn 0!');
+                    return;
+                }
+
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
+                button.disabled = true;
+
+                try {
+                    const response = await fetch('/checkout/cart/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ productId, quantity })
+                    });
+
+                    if (!response.ok) throw new Error('Lỗi khi thêm vào giỏ hàng');
+
+                    const data = await response.json();
+
+                    alert(`Đã thêm ${quantity} sản phẩm "${data.productName}" vào giỏ hàng!`);
+
+                    // [FIXED] Sửa selector từ .cart-count thành #cartCount để khớp với header.ejs
+                    const cartCountElement = document.getElementById('cartCount');
+                    if (cartCountElement) {
+                        cartCountElement.textContent = data.totalItems || 0;
+                        // Hiệu ứng rung lắc nhẹ để gây chú ý (tùy chọn)
+                        cartCountElement.style.transform = "scale(1.2)";
+                        setTimeout(() => cartCountElement.style.transform = "scale(1)", 200);
+                    }
+
+                    document.getElementById('quantity').value = 1;
+
+                } catch (error) {
+                    console.error('Lỗi:', error);
+                    alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.');
+                } finally {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            }
+
+            async function buyNow(productId) {
+                const quantity = parseInt(document.getElementById('quantity').value);
+                if (quantity < 1) {
+                    alert('Số lượng phải lớn hơn 0!');
+                    return;
+                }
+
+                try {
+                    const addResponse = await fetch('/checkout/cart/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ productId, quantity })
+                    });
+
+                    if (!addResponse.ok) throw new Error('Lỗi');
+                    window.location.href = '/checkout';
+                } catch (error) {
+                    console.error('Lỗi:', error);
+                    alert('Có lỗi xảy ra.');
+                }
+            }
+        </script>
+</body>
+
+</html>

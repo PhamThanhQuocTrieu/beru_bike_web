@@ -1,0 +1,712 @@
+/* ====== RESET ====== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  padding-top: 100px;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  color: #222;
+  background: #fafafa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ====== LAYOUT ====== */
+.container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ====== SLIDER FULL WIDTH ====== */
+.top-slider {
+  /* Added margin-top for spacing from header */
+  width: 100%;
+  min-height: 250px;
+  overflow: visible;
+  position: relative;
+  margin-top: 80px;
+  z-index: 1;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Removed any padding to eliminate horizontal white space */
+  padding: 0;
+}
+
+.top-slider .slides {
+  display: flex;
+  width: 100%;
+  transition: transform 0.8s ease-in-out;
+  /* Removed any margin to eliminate horizontal white space */
+  margin: 0;
+}
+
+.top-slider .slide {
+  width: 100%;
+  flex-shrink: 0;
+  display: none;
+  /* Removed padding to make images full width */
+  padding: 0;
+  margin: 0;
+}
+
+.top-slider .slide.active {
+  display: block;
+}
+
+.top-slider img {
+  /* Changed to object-fit: cover for full width without gaps */
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  max-height: 600px;
+  /* Removed any margin to eliminate horizontal white space */
+  margin: 0;
+}
+
+/* ====== TEXT SEPARATOR ====== */
+.section-title {
+  text-align: center;
+  padding: 20px 10px;
+  background: #fff;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.section-title h2 {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* ====== SLIDER ARROWS ====== */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  font-size: 24px;
+  border-radius: 50%;
+  transition: 0.3s;
+  z-index: 10;
+}
+
+.arrow:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.arrow.left {
+  left: 15px;
+}
+
+.arrow.right {
+  right: 15px;
+}
+
+/* ====== SLIDER DOTS ====== */
+.dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.dots span.active {
+  background: rgba(255, 255, 255, 1);
+}
+
+/* ====== HERO ====== */
+.hero {
+  display: flex;
+  background: #111;
+  color: #fff;
+  min-height: 500px;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+
+.hero-left {
+  flex: 1;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-left h2 {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.hero-left p {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 400;
+  opacity: 0.9;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.hero-left .btn {
+  display: inline-block;
+  width: 200px;
+  text-align: center;
+  background: #444;
+  color: #fff;
+  padding: 12px 25px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.hero-left .btn:hover {
+  background: #555;
+}
+
+.hero-right {
+  flex: 3;
+  display: flex;
+}
+
+.hero-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  flex: 1;
+}
+
+.hero-item p {
+  text-align: center;
+  background: #3b3b3b;
+  color: #fff;
+  padding: 12px 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* ===== CATEGORY SECTION ===== */
+.category-section {
+  /* Improved section styling with better spacing and shadows */
+  max-width: 1400px;
+  width: 100%;
+  margin: 60px auto;
+  padding: 48px 32px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ==== HEADER ==== */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Increased margin for better spacing */
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.section-header h2 {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Increased font size for better hierarchy */
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
+  background: none;
+  position: relative;
+  padding-bottom: 0;
+}
+
+.section-header .view-all {
+  /* Improved button styling with background and hover effects */
+  color: #1a1a1a;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+}
+
+.section-header .view-all:hover {
+  background: #e8e8e8;
+  transform: translateX(4px);
+}
+
+/* ==== PRODUCT GRID ==== */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* Increased gap for better spacing between cards */
+  gap: 24px;
+  margin-bottom: 32px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ==== PRODUCT CARD ==== */
+.product-card {
+  /* Enhanced card styling with better shadows and transitions */
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 1px solid #e8e8e8;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.product-card:hover {
+  /* Enhanced hover effect with stronger shadow and lift */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+  border-color: #d0d0d0;
+}
+
+.product-card img {
+  width: 100%;
+  /* Increased image height for better product display */
+  height: 260px;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #fafafa;
+}
+
+.product-card:hover img {
+  /* Increased scale for more dramatic hover effect */
+  transform: scale(1.08);
+}
+
+.product-card h3 {
+  /* Improved typography for product names */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.5;
+  margin: 16px 16px 8px 16px;
+  min-height: 45px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-card .brand {
+  /* Added brand styling */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #666;
+  margin: 0 16px 12px 16px;
+}
+
+.product-card .price-wrapper {
+  /* Added wrapper for better price layout */
+  margin: 0 16px 16px 16px;
+}
+
+.product-card .price {
+  /* Improved price display with better spacing */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.product-card .current-price {
+  /* Enhanced current price styling */
+  font-weight: 700;
+  font-size: 18px;
+  color: #27ae60;
+}
+
+.product-card .original-price {
+  /* Improved original price styling */
+  font-weight: 400;
+  font-size: 14px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+/* Added styled button for add to cart */
+.product-card .add-to-cart {
+  width: calc(100% - 32px);
+  margin: 0 16px 16px 16px;
+  padding: 12px;
+  background: #1a1a1a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-card .add-to-cart:hover {
+  background: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ==== VIEW MORE BUTTON ==== */
+.view-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.view-more-btn {
+  background: #2c2c2c;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.view-more-btn:hover {
+  background: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .container {
+    padding: 16px;
+  }
+
+  .category-section {
+    padding: 40px 24px;
+    margin: 48px 16px;
+  }
+
+  .hero {
+    flex-direction: column;
+  }
+
+  .hero-left {
+    padding: 40px 30px;
+  }
+
+  .hero-right {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 992px) {
+  body {
+    padding-top: 90px;
+  }
+
+  .category-section {
+    padding: 32px 20px;
+    margin: 40px 12px;
+  }
+
+  .section-header h2 {
+    font-size: 24px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .product-card img {
+    height: 220px;
+  }
+
+  .container {
+    padding: 12px;
+  }
+
+  .hero-left h2 {
+    font-size: 28px;
+  }
+
+  .hero-left p {
+    font-size: 14px;
+  }
+
+  .hero {
+    margin-bottom: 48px;
+  }
+
+  .top-slider img {
+    max-height: 350px;
+    margin-top: 45px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-top: 80px;
+  }
+
+  .category-section {
+    margin: 32px 8px;
+    padding: 24px 16px;
+  }
+
+  .section-header h2 {
+    font-size: 20px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .product-card img {
+    height: 200px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .hero {
+    min-height: 400px;
+    margin-bottom: 40px;
+  }
+
+  .hero-left {
+    padding: 30px 20px;
+  }
+
+  .hero-left h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  .hero-left p {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .hero-right {
+    flex-direction: column;
+  }
+
+  .hero-item img {
+    height: 150px;
+  }
+
+  .hero-item p {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+
+  .top-slider {
+    min-height: 180px;
+    /* Added margin-top for mobile spacing */
+    margin-top: 16px;
+  }
+
+  .top-slider img {
+    max-height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding-top: 75px;
+  }
+
+  .category-section {
+    margin: 24px 8px;
+    padding: 20px 12px;
+  }
+
+  .section-header {
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+  }
+
+  .section-header h2 {
+    font-size: 18px;
+  }
+
+  .section-header .view-all {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .product-card img {
+    height: 160px;
+  }
+
+  .product-card h3 {
+    font-size: 14px;
+    margin: 12px 12px 6px 12px;
+    min-height: 40px;
+  }
+
+  .product-card .brand {
+    font-size: 12px;
+    margin: 0 12px 8px 12px;
+  }
+
+  .product-card .price-wrapper {
+    margin: 0 12px 12px 12px;
+  }
+
+  .product-card .current-price {
+    font-size: 16px;
+  }
+
+  .product-card .original-price {
+    font-size: 13px;
+  }
+
+  .product-card .add-to-cart {
+    width: calc(100% - 24px);
+    margin: 0 12px 12px 12px;
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .view-more-btn {
+    padding: 12px 24px;
+    font-size: 12px;
+  }
+
+  .container {
+    padding: 8px;
+  }
+
+  .hero {
+    flex-direction: column;
+    min-height: 300px;
+    margin-bottom: 32px;
+  }
+
+  .hero-left {
+    padding: 20px 16px;
+  }
+
+  .hero-left h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .hero-left p {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .hero-left .btn {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .hero-right {
+    flex-direction: column;
+  }
+
+  .hero-item img {
+    height: 150px;
+  }
+
+  .hero-item p {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+
+  .top-slider {
+    min-height: 180px;
+    /* Added margin-top for mobile spacing */
+    margin-top: 20px;
+  }
+
+  .top-slider img {
+    max-height: 220px;
+  }
+}

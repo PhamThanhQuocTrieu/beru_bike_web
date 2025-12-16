@@ -1,0 +1,311 @@
+<!-- <!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Báo cáo & Thống kê - Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style/admin.css">
+  <link rel="stylesheet" href="/style/reports.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+      .admin-avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e7ff;
+    }
+</style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-container">
+      <div class="logo"><span>Admin Beru Bike</span></div>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="/admin">Dashboard</a></li>
+          <li><a href="/admin/products">Sản phẩm</a></li>
+          <li><a href="/admin/users">Người dùng</a></li>
+          <li><a href="/admin/orders">Đơn hàng</a></li>
+          <li><a href="/admin/reports" class="active">Báo cáo</a></li>
+        </ul>
+      </nav>
+      <div class="user-profile">
+        <% if (user.avatar && user.avatar.trim() !=='' ) { %>
+          <img src="<%= user.avatar %>" alt="Admin Avatar" class="admin-avatar-img">
+          <% } else { %>
+            <div class="avatar-circle">
+              <%= user.firstName.charAt(0).toUpperCase() %>
+            </div>
+            <% } %>
+
+              <div class="user-info-text">
+                <span class="u-name">
+                  <%= user.firstName %>
+                    <%= user.lastName %>
+                </span>
+                <span class="u-role">Administrator</span>
+              </div>
+              <a href="/auth/logout" class="logout-btn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="/admin/products"><i class="fas fa-box"></i> Sản phẩm</a></li>
+      <li><a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Đơn hàng</a></li>
+      <li><a href="/admin/users"><i class="fas fa-users"></i> Khách hàng</a></li>
+      <li><a href="/admin/reports"class="active"><i class="fas fa-chart-line"></i> Báo cáo</a></li>
+      <li style="margin-top: auto;"><a href="/admin/settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="report-container">
+      
+      <div class="report-header">
+        <div class="report-title">
+          <h1>Tổng quan Báo cáo</h1>
+          <p>Dữ liệu kinh doanh chi tiết trong 30 ngày qua.</p>
+        </div>
+        <button class="btn-export" onclick="alert('Tính năng xuất Excel đang phát triển')">
+          <i class="fas fa-download"></i> Xuất Báo Cáo
+        </button>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-title">Tổng Doanh thu</div>
+          <div class="kpi-value">
+            <% 
+              let totalRev = 0;
+              if (reports && reports.topProducts) {
+                  totalRev = reports.topProducts.reduce((sum, item) => sum + item.revenue, 0);
+              }
+            %>
+            <%= totalRev.toLocaleString('vi-VN') %> ₫
+          </div>
+          <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 12.5%</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">Tổng sản phẩm đã bán</div>
+          <div class="kpi-value">
+            <% 
+              let totalSold = 0;
+              if (reports && reports.topProducts) {
+                  totalSold = reports.topProducts.reduce((sum, item) => sum + item.sold, 0);
+              }
+            %>
+            <%= totalSold %>
+          </div>
+          <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 8.2%</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">Người dùng mới</div>
+          <div class="kpi-value"><%= reports.newUsers ? reports.newUsers.length : 0 %></div>
+          <div class="kpi-trend down"><i class="fas fa-arrow-down"></i> 2.1%</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">Tỷ lệ chuyển đổi</div>
+          <div class="kpi-value">3.2%</div>
+          <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> Ổn định</div>
+        </div>
+      </div>
+
+      <section class="chart-section">
+        <div class="section-header">
+          <div class="section-title">Phân tích doanh thu Top sản phẩm</div>
+        </div>
+        <div style="height: 350px;">
+          <canvas id="mainChart"></canvas>
+        </div>
+      </section>
+
+      <div class="data-grid">
+        <div class="data-card">
+          <div class="card-header">
+            <div class="section-title">Sản phẩm bán chạy nhất</div>
+          </div>
+          <div class="card-body">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th width="50%">Sản phẩm</th>
+                  <th width="25%">Đã bán</th>
+                  <th width="25%" style="text-align: right;">Doanh thu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(reports.topProducts && reports.topProducts.length > 0) { %>
+                  <% reports.topProducts.forEach((item, index) => { 
+                     let maxSold = reports.topProducts[0].sold || 1;
+                     let percent = (item.sold / maxSold) * 100;
+                     // FIX 1: Tách chuỗi CSS ra biến riêng để Editor không báo lỗi
+                     let styleWidth = "width: " + percent + "%"; 
+                  %>
+                  <tr>
+                    <td>
+                      <div class="product-name">
+                        <div class="product-icon"><i class="fas fa-box"></i></div>
+                        <div>
+                          <div style="font-weight: 600;"><%= item.name %></div>
+                          <div style="font-size: 12px; color: #9ca3af;">Rank #<%= index + 1 %></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div style="font-weight: 600;"><%= item.sold %></div>
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="<%= styleWidth %>"></div>
+                      </div>
+                    </td>
+                    <td style="text-align: right; font-weight: 600; color: #111;">
+                      <%= item.revenue.toLocaleString('vi-VN') %> ₫
+                    </td>
+                  </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr><td colspan="3" style="text-align: center;">Chưa có dữ liệu</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <div class="card-header">
+            <div class="section-title">Khách hàng mới</div>
+          </div>
+          <div class="card-body">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Người dùng</th>
+                  <th style="text-align: right;">Ngày tham gia</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(reports.newUsers && reports.newUsers.length > 0) { %>
+                  <% reports.newUsers.forEach(user => { %>
+                  <tr>
+                    <td>
+                      <div class="user-info">
+                        <div class="user-avatar">
+                          <%= user.email ? user.email.charAt(0).toUpperCase() : 'U' %>
+                        </div>
+                        <div>
+                          <div style="font-weight: 500;"><%= user.email ? user.email.split('@')[0] : 'N/A' %></div>
+                          <div style="font-size: 12px; color: #9ca3af;"><%= user.email %></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="text-align: right; color: #6b7280;">
+                      <%= new Date(user.createdAt).toLocaleDateString('vi-VN') %>
+                    </td>
+                  </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr><td colspan="2" style="text-align: center;">Không có người dùng mới</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Admin Panel. Designed for Beru Bike.</p>
+    </div>
+  </footer>
+
+  <script id="chart-data-source" type="application/json">
+    <%- JSON.stringify(reports.topProducts || []) %>
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.querySelector('.sidebar');
+      const toggleBtn = document.querySelector('.toggle-sidebar');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => { sidebar.classList.toggle('active'); });
+      }
+
+      // --- FIX 2: LẤY DỮ LIỆU TỪ THẺ SCRIPT JSON (AN TOÀN TUYỆT ĐỐI) ---
+      const rawDataElement = document.getElementById('chart-data-source');
+      const rawData = JSON.parse(rawDataElement.textContent);
+      
+      const labels = rawData.map(item => item.name);
+      const dataRevenue = rawData.map(item => item.revenue);
+      const dataSold = rawData.map(item => item.sold);
+
+      const ctx = document.getElementById('mainChart').getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+      gradient.addColorStop(0, 'rgba(79, 70, 229, 0.2)');
+      gradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Doanh thu (VNĐ)',
+              data: dataRevenue,
+              backgroundColor: '#4f46e5',
+              borderRadius: 4,
+              barPercentage: 0.6,
+              yAxisID: 'y',
+            },
+            {
+              label: 'Số lượng bán',
+              data: dataSold,
+              type: 'line',
+              borderColor: '#10b981',
+              backgroundColor: '#10b981',
+              borderWidth: 2,
+              tension: 0.4,
+              pointRadius: 4,
+              yAxisID: 'y1',
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              backgroundColor: '#1f2937', padding: 12, titleFont: { size: 14 }, bodyFont: { size: 13 }, cornerRadius: 8, displayColors: true
+            }
+          },
+          scales: {
+            y: {
+              type: 'linear', display: true, position: 'left',
+              grid: { borderDash: [2, 2], color: '#e5e7eb' },
+              title: { display: true, text: 'Doanh thu' }
+            },
+            y1: {
+              type: 'linear', display: true, position: 'right',
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: 'Số lượng' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html> -->

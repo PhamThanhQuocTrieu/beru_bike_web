@@ -1,0 +1,376 @@
+/* =========================================
+   1. GLOBAL & LAYOUT
+   ========================================= */
+body {
+    background-color: #f5f5f5;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+.detail-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding-bottom: 50px;
+}
+
+/* =========================================
+   2. HEADER CARD (Tiêu đề & Trạng thái)
+   ========================================= */
+.detail-header-card {
+    background: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+    margin-bottom: 12px;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #555;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+.back-link:hover { color: #ee4d2d; }
+
+.order-meta {
+    font-size: 14px;
+}
+
+.divider {
+    margin: 0 15px;
+    color: #e0e0e0;
+}
+
+.status-text {
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.status-text.pending { color: #ffbf00; }
+.status-text.shipping { color: #2673dd; }
+.status-text.completed { color: #26aa99; }
+.status-text.cancelled { color: #777; }
+
+/* =========================================
+   3. STEPPER CARD (Thanh tiến trình)
+   ========================================= */
+.stepper-card {
+    background: #fff;
+    padding: 40px 20px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+}
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 140px;
+    z-index: 2;
+    position: relative;
+}
+
+.step-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 4px solid #f0f0f0;
+    background: #fff;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: 0.3s;
+}
+
+.step.active .step-icon {
+    border-color: #26aa99;
+    color: #26aa99;
+}
+
+.step-label {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #999;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.step.active .step-label {
+    color: #000;
+}
+
+.step-time {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+/* Đường nối giữa các bước */
+.step-line {
+    flex: 1;
+    height: 4px;
+    background: #f0f0f0;
+    margin-top: 30px; /* Căn giữa theo chiều dọc của icon */
+}
+
+.step-line.active {
+    background: #26aa99;
+}
+
+.cancel-alert {
+    text-align: center;
+    color: #dc3545;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 20px;
+    background: #fff5f5;
+    border: 1px dashed #dc3545;
+    border-radius: 4px;
+}
+
+/* =========================================
+   4. INFO CARD (Địa chỉ + Sản phẩm)
+   ========================================= */
+.info-card {
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+    margin-bottom: 1px; /* Tạo khoảng hở nhỏ với footer */
+}
+
+/* Địa chỉ (Có viền sọc màu sắc giống Shopee) */
+.address-section {
+    padding: 25px 30px;
+    border-bottom: 1px solid #eaeaea;
+    background: #fff top right/contain no-repeat;
+    /* Hiệu ứng viền sọc trên cùng */
+    background-image: repeating-linear-gradient(45deg,#6fa6d6,#6fa6d6 33px,transparent 0,transparent 41px,#f18d9b 0,#f18d9b 74px,transparent 0,transparent 82px);
+    background-position-x: -30px;
+    background-size: 116px 3px;
+    background-repeat: repeat-x;
+}
+
+.address-section h3 {
+    font-size: 18px;
+    margin: 0 0 15px 0;
+    color: #000;
+}
+
+.addr-content .name {
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+
+.addr-content .phone {
+    color: #555;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.addr-content .detail {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.order-note {
+    margin-top: 15px;
+    padding: 12px;
+    background: #fafafa;
+    border: 1px dashed #e0e0e0;
+    font-size: 13px;
+    color: #666;
+    border-radius: 4px;
+}
+
+/* Danh sách sản phẩm */
+.products-section {
+    padding: 0 30px 20px;
+}
+
+.prod-header {
+    display: flex;
+    padding: 20px 0;
+    color: #888;
+    font-size: 14px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.prod-header > div:first-child { flex: 4; }
+.prod-header > div:not(:first-child) { flex: 1; text-align: center; }
+.prod-header > div:last-child { text-align: right; }
+
+.prod-item {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.prod-item:last-child { border-bottom: none; }
+
+.prod-info {
+    flex: 4;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.prod-info img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border: 1px solid #e8e8e8;
+    background: #fafafa;
+}
+
+.prod-meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 80px;
+}
+
+.prod-name {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.4;
+    max-width: 400px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.buy-again {
+    font-size: 13px;
+    color: #ee4d2d;
+    text-decoration: none;
+    border: 1px solid #ee4d2d;
+    padding: 4px 10px;
+    border-radius: 2px;
+    width: fit-content;
+    transition: 0.2s;
+}
+
+.buy-again:hover {
+    background: #fff5f5;
+}
+
+.text-center { text-align: center; font-size: 14px; color: #555; flex: 1; }
+.text-right { text-align: right; flex: 1; }
+
+.highlight {
+    color: #ee4d2d;
+    font-weight: 500;
+}
+
+/* =========================================
+   5. SUMMARY CARD (Tổng tiền)
+   ========================================= */
+.summary-card {
+    background: #fffafa; /* Màu nền hơi hồng nhạt giống Shopee */
+    border-top: 1px solid #f1f1f1;
+    padding: 20px 30px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+}
+
+.summary-card .row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.summary-card .row span:first-child {
+    margin-right: 40px;
+    color: #888;
+    text-align: right;
+    min-width: 200px;
+}
+
+.summary-card .row span:last-child {
+    width: 150px;
+    text-align: right;
+}
+
+.summary-card .total {
+    margin-top: 10px;
+    border-top: 1px dotted #e0e0e0;
+    padding-top: 20px;
+    align-items: center;
+}
+
+.summary-card .total span:first-child {
+    font-size: 16px;
+    color: #333;
+}
+
+.big-price {
+    font-size: 26px;
+    color: #ee4d2d;
+    font-weight: 500;
+}
+
+.actions-right {
+    text-align: right;
+    margin-top: 25px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 20px;
+}
+
+.btn-cancel-detail {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 10px 30px;
+    cursor: pointer;
+    color: #555;
+    border-radius: 2px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-cancel-detail:hover {
+    background: #f8f8f8;
+    border-color: #ccc;
+    color: #333;
+}
+
+/* =========================================
+   RESPONSIVE (Mobile)
+   ========================================= */
+@media (max-width: 768px) {
+    .detail-container { padding: 0 10px 50px; }
+    .prod-header { display: none; }
+    .prod-item { flex-wrap: wrap; position: relative; }
+    .prod-info { width: 100%; flex: none; margin-bottom: 15px; }
+    .text-center, .text-right { width: auto; flex: none; font-size: 14px; margin-right: 15px; }
+    .text-right.highlight { position: absolute; bottom: 20px; right: 0; font-size: 16px; }
+    
+    .stepper { overflow-x: auto; padding-bottom: 20px; justify-content: flex-start; }
+    .step { width: 100px; flex-shrink: 0; }
+    .step-line { width: 50px; flex-shrink: 0; margin-top: 25px; }
+    
+    .summary-card .row { justify-content: space-between; }
+    .summary-card .row span:first-child { text-align: left; margin-right: 0; }
+}

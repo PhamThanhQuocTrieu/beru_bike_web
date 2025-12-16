@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="/style/header.css" />
+    <link rel="stylesheet" href="/style/search-result.css" />
+</head>
+
+<body>
+    <header>
+        <%- include('header') %>  <!-- Bỏ 'partials/' -->
+    </header>
+
+    <main class="search-results">
+        <div class="container">
+            <h1>Kết quả tìm kiếm cho: "<%= keyword %>"</h1>
+            <p class="count">Tìm thấy <%= total || products.length %> sản phẩm</p>
+
+            <div class="products-grid">
+                <% products.forEach(product => { %>
+                    <div class="product-card">
+                        <a href="/products/<%= product.slug || product._id %>">
+
+                            <div class="img-wrapper">
+                                <img 
+                                    src="<%= product.mainImage || '/image/icon/no-image.png' %>" 
+                                    alt="<%= product.name %>" 
+                                />
+                            </div>
+
+                            <h3><%= product.name %></h3>
+                            <% if (product.brand) { %>
+                                <p class="brand"><small>Thương hiệu: <%= product.brand %></small></p>
+                            <% } %>
+
+                            <p class="price">
+                                <% if (product.oldPrice && product.oldPrice > product.price) { %>
+                                    <span class="old-price" style="text-decoration: line-through; color: #999; font-size: 0.9em;">
+                                        <%= product.oldPrice.toLocaleString('vi-VN') %> VNĐ
+                                    </span>
+                                    <br>
+                                    <span class="new-price" style="color: #e74c3c; font-weight: bold;">
+                                        <%= product.price.toLocaleString('vi-VN') %> VNĐ
+                                    </span>
+                                <% } else { %>
+                                    <%= product.price.toLocaleString('vi-VN') %> VNĐ
+                                <% } %>
+                            </p>
+                        </a>
+                    </div>
+                <% }) %>
+            </div>
+
+            <% if (totalPages > 1) { %>
+                <div class="pagination">
+
+                    <% if (currentPage > 1) { %>
+                        <a href="?keyword=<%= keyword %>&page=<%= currentPage - 1 %>" class="page-btn">« Trước</a>
+                    <% } %>
+
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <a href="?keyword=<%= keyword %>&page=<%= i %>"
+                           class="page-number <%= i === currentPage ? 'active' : '' %>">
+                            <%= i %>
+                        </a>
+                    <% } %>
+
+                    <% if (currentPage < totalPages) { %>
+                        <a href="?keyword=<%= keyword %>&page=<%= currentPage + 1 %>" class="page-btn">Tiếp »</a>
+                    <% } %>
+
+                </div>
+            <% } %>
+
+        </div>
+    </main>
+
+</body>
+</html>

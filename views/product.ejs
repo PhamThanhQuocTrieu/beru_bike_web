@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/style/header.css">
+    <link rel="stylesheet" href="/style/product.css">
+    <link rel="stylesheet" href="/style/footer.css">
+    <link rel="icon" type="image/x-icon" href="/image/logo/favicon.png">
+    
+    <style>
+        .pagination-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .page-btn, .page-number {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .page-number.active, .page-btn:hover, .page-number:hover {
+            background-color: #000; /* Màu chủ đạo của bạn */
+            color: #fff;
+            border-color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('header') %>
+
+    <main class="product-page">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/">Trang chủ</a>
+                <span>/</span>
+                <% if (typeof keyword !=='undefined' && keyword) { %>
+                    <span>Sản Phẩm / Kết quả tìm kiếm</span>
+                <% } else { %>
+                    <span>Sản Phẩm</span>
+                <% } %>
+            </div>
+
+            <div class="product-layout">
+                <aside class="sidebar">
+                    <div class="filter-section">
+                        <h3 class="filter-title">
+                            <span class="icon">⊖</span>
+                            Thương Hiệu
+                        </h3>
+                        <div class="filter-options">
+                            <label class="checkbox-label brand-label">
+                                <input type="checkbox" name="brand" value="giant">
+                                <img src="/image/logo_hang_xe/giant.png" alt="Giant" class="brand-logo">
+                            </label>
+                            <label class="checkbox-label brand-label">
+                                <input type="checkbox" name="brand" value="trinx">
+                                <img src="/image/logo_hang_xe/trinx.png" alt="Trinx" class="brand-logo">
+                            </label>
+                            <label class="checkbox-label brand-label">
+                                <input type="checkbox" name="brand" value="java">
+                                <img src="/image/logo_hang_xe/java.png" alt="Java" class="brand-logo">
+                            </label>
+                            <label class="checkbox-label brand-label">
+                                <input type="checkbox" name="brand" value="vinbike">
+                                <img src="/image/logo_hang_xe/vinbike.png" alt="VinBike" class="brand-logo">
+                            </label>
+                            <label class="checkbox-label brand-label">
+                                <input type="checkbox" name="brand" value="maxbike">
+                                <img src="/image/logo_hang_xe/maxbike.png" alt="maxbike" class="brand-logo">
+                            </label>
+                            <label class="checkbox-label brand-label">
+                                <input type="checkbox" name="brand" value="liv">
+                                <img src="/image/logo_hang_xe/liv.png" alt="liv" class="brand-logo">
+                            </label>
+                            <label class="checkbox-label brand-label">
+                                <input type="checkbox" name="brand" value="misaki">
+                                <img src="/image/logo_hang_xe/misaki.png" alt="misaki" class="brand-logo">
+                            </label>
+                            <label class="checkbox-label brand-label">
+                                <input type="checkbox" name="brand" value="raptor">
+                                <img src="/image/logo_hang_xe/raptor.png" alt="Raptor" class="brand-logo">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3 class="filter-title">
+                            <span class="icon">⊖</span>
+                            Kiểu xe
+                        </h3>
+                        <div class="filter-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="bike-type" value="xe đạp cho trẻ em">
+                                <span>Xe đạp trẻ em</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="bike-type" value="xe đạp đường phố">
+                                <span>Xe đạp đường phố</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="bike-type" value="xe đạp thể thao">
+                                <span>Xe đạp thể thao</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3 class="filter-title">
+                            <span class="icon">⊖</span>
+                            Khoảng giá
+                        </h3>
+                        <div class="filter-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="price-range" value="2-3">
+                                <span>Từ 2 ~ 3 triệu</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="price-range" value="3-6">
+                                <span>Từ 3 ~ 6 triệu</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="price-range" value="6-15">
+                                <span>Từ 6 ~ 15 triệu</span>
+                            </label>
+                        </div>
+                    </div>
+                </aside>
+
+                <div class="product-content">
+                    <% if (typeof keyword !=='undefined' && keyword) { %>
+                        <h1>Kết quả tìm kiếm cho từ khoá: "<%= keyword %>"</h1>
+                        <p class="count">Tìm thấy <%= total || 0 %> sản phẩm</p>
+                    <% } else { %>
+                        <p class="product-description">
+                            Danh sách các sản phẩm được phân phối toàn quốc bởi Beru Bike.
+                        </p>
+                    <% } %>
+
+                    <div id="loadingSpinner" class="loading" style="display: none;">
+                        <p>Đang tải sản phẩm...</p>
+                    </div>
+
+                    <div class="product-grid" id="productGrid">
+                        <% if (products && products.length > 0) { %>
+                            <% products.forEach(product => { %>
+                                <div class="product-card" data-id="<%= product._id %>">
+                                    <img src="<%= product.mainImage || '/image/icon/no-image.png' %>" alt="<%= product.name %>">
+                                    <h4><%= product.name %></h4>
+                                    <div class="brand"><%= product.brand || '' %></div>
+                                    <div class="price-wrapper">
+                                        <% if (product.oldPrice && product.oldPrice > product.price) { %>
+                                            <span class="old-price">₫<%= product.oldPrice.toLocaleString('vi-VN') %></span>
+                                            <span class="discount">-<%= Math.round(((product.oldPrice - product.price) / product.oldPrice * 100)) %>%</span>
+                                        <% } %>
+                                        <span class="price">₫<%= (product.price || 0).toLocaleString('vi-VN') %></span>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <p>Chưa có sản phẩm nào.</p>
+                        <% } %>
+                    </div>
+
+                    <div id="pagination" class="pagination-container" style="<%= (typeof lastPage !== 'undefined' && lastPage > 1) ? 'display: flex;' : 'display: none;' %>">
+                        <% if (typeof lastPage !== 'undefined' && lastPage > 1) { %>
+                            <% if (currentPage > 1) { %>
+                                <a href="?page=<%= currentPage - 1 %>" class="page-btn" onclick="event.preventDefault(); loadPage(<%= currentPage - 1 %>)">« Trước</a>
+                            <% } %>
+
+                            <% for(let i = 1; i <= lastPage; i++) { %>
+                                <a href="?page=<%= i %>" 
+                                   class="page-number <%= i === currentPage ? 'active' : '' %>"
+                                   onclick="event.preventDefault(); loadPage(<%= i %>)">
+                                   <%= i %>
+                                </a>
+                            <% } %>
+
+                            <% if (currentPage < lastPage) { %>
+                                <a href="?page=<%= currentPage + 1 %>" class="page-btn" onclick="event.preventDefault(); loadPage(<%= currentPage + 1 %>)">Tiếp »</a>
+                            <% } %>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+           <!-- FOOTER -->
+          <footer>
+            <div class="footer-container">
+              <!-- Cột 1 -->
+              <div class="footer-col">
+                <h4>THÔNG TIN</h4>
+                <ul>
+                  <li><a href="#">Giới thiệu</a></li>
+                  <li><a href="#">Danh sách đại lý</a></li>
+                  <li><a href="#">Địa điểm sửa chữa</a></li>
+                  <li><a href="#">Chính sách bảo hành</a></li>
+                  <li><a href="#">Chính sách thanh toán</a></li>
+                  <li><a href="#">Chính sách vận chuyển và giao nhận</a></li>
+                  <li><a href="#">Chính sách đổi trả và hoàn tiền</a></li>
+                  <li><a href="#">Chính sách bảo mật thông tin</a></li>
+                  <li><a href="#">Hoạt động cộng đồng</a></li>
+                </ul>
+              </div>
+
+              <!-- Cột 2 -->
+              <div class="footer-col">
+                <h4>SẢN PHẨM</h4>
+                <ul>
+                  <li><a href="#">Xe Đạp Thể Thao</a></li>
+                  <li><a href="#">Xe Đạp Phổ Thông</a></li>
+                  <li><a href="#">Xe Đạp Trẻ Em</a></li>
+                  <li><a href="#">Phụ Kiện</a></li>
+                  <li><a href="#">Cannondale</a></li>
+                </ul>
+
+                <h4>TIN TỨC</h4>
+                <ul>
+                  <li><a href="#">Quan hệ cổ đông</a></li>
+                  <li><a href="#">Tin tức công ty</a></li>
+                  <li><a href="#">Tin tức xe đạp</a></li>
+                  <li><a href="#">Tuyển dụng</a></li>
+                </ul>
+              </div>
+
+              <!-- Cột 3 -->
+              <div class="footer-col">
+                <h4>LIÊN HỆ</h4>
+                <p><b>NHÀ MÁY SẢN XUẤT:</b><br>Lô A2CN3, Cụm công nghiệp Tây Sơn Hiên, Phường An Hòa, TP.Cần Thơ</p>
+                <p><b>CHI NHÁNH MIỀN NAM:</b><br>19/12C, Đường A!0, Khu công nghiệp Tân Hiệp, Quận Tân Bình, TP.HCM</p>
+                <p>Email: <a href="mailto:brbike@gmail.com.vn">brbike@gmail.com.vn</a></p>
+              </div>
+
+              <!-- Cột 4 -->
+              <div class="footer-col">
+                <h4>CÔNG TY CỔ PHẦN BERU BIKE CẦN THƠ</h4>
+                <p>GPKD Số 0130150828 - cấp ngày 28/08/2022</p>
+                <p>Số 10B Lý Tự Trọng, Ninh Kiều, Cần Thơ</p>
+                <h2>038 960 3429</h2>
+                <div class="social">
+                  <a href=""><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+                  <a href=""><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube"></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="footer-bottom">
+              <p>© <span id="year"></span> Xe Đạp Beru Bike</p>
+            </div>
+          </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Update Footer Year
+            const yearSpan = document.getElementById('year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+            // Mobile Menu
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            const mobileNav = document.querySelector('.mobile-nav');
+            if (menuToggle && mobileNav) {
+                menuToggle.addEventListener('click', function () {
+                    mobileNav.classList.toggle('active');
+                    menuToggle.classList.toggle('active');
+                });
+            }
+
+            // Click Handler for Products (Delegation is better but direct loop works too)
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', function (e) {
+                    if (e.target.closest('.add-btn')) return;
+                    const id = this.dataset.id;
+                    window.location.href = `/product-detail/${id}`;
+                });
+            });
+
+            // Initial Filter Load from URL (if any)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('brands') || urlParams.has('bikeTypes') || urlParams.has('priceRanges')) {
+                // Set checked status
+                if(urlParams.has('brands')) {
+                    urlParams.get('brands').split(',').forEach(b => {
+                        const el = document.querySelector(`input[name="brand"][value="${b}"]`);
+                        if(el) el.checked = true;
+                    });
+                }
+                if(urlParams.has('bikeTypes')) {
+                    urlParams.get('bikeTypes').split(',').forEach(t => {
+                        const el = document.querySelector(`input[name="bike-type"][value="${t}"]`);
+                        if(el) el.checked = true;
+                    });
+                }
+                if(urlParams.has('priceRanges')) {
+                    urlParams.get('priceRanges').split(',').forEach(p => {
+                        const el = document.querySelector(`input[name="price-range"][value="${p}"]`);
+                        if(el) el.checked = true;
+                    });
+                }
+                // Nếu có filter trên URL thì gọi AJAX để render lại đúng filter đó
+                // Tuy nhiên, nếu server đã render đúng (SSR) thì không cần gọi lại, 
+                // trừ khi bạn muốn đảm bảo tính năng dynamic. 
+                // Ở đây ta có thể skip gọi applyFilters() lúc đầu nếu Controller đã render đúng trang 1.
+            }
+        });
+
+        // ================= FILTER & PAGINATION LOGIC =================
+
+        let filterTimeout;
+
+        function applyFilters() {
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(() => {
+                loadData(1); // Reset về trang 1 khi thay đổi filter
+            }, 300);
+        }
+
+        function loadPage(page) {
+            loadData(page);
+        }
+
+        function loadData(page) {
+            // Hiển thị loading
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('productGrid').style.opacity = '0.5';
+
+            // Thu thập dữ liệu từ checkbox
+            const brands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+            const bikeTypes = Array.from(document.querySelectorAll('input[name="bike-type"]:checked')).map(cb => cb.value);
+            const priceRanges = Array.from(document.querySelectorAll('input[name="price-range"]:checked')).map(cb => cb.value);
+
+            // Tạo URL Params
+            const params = new URLSearchParams();
+            if (brands.length > 0) params.append('brands', brands.join(','));
+            if (bikeTypes.length > 0) params.append('bikeTypes', bikeTypes.join(','));
+            if (priceRanges.length > 0) params.append('priceRanges', priceRanges.join(','));
+            params.append('page', page);
+
+            // Update Browser URL (không reload trang)
+            const newUrl = `/products?${params.toString()}`;
+            history.pushState({ brands, bikeTypes, priceRanges, page }, '', newUrl);
+
+            // Fetch Data
+            fetch(`/products/filter?${params.toString()}`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    updateProductGrid(data.products);
+                    updatePagination(data);
+                    updateCount(data.total);
+                    
+                    // Ẩn loading
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    document.getElementById('productGrid').style.opacity = '1';
+                    
+                    // Scroll lên đầu grid cho user dễ nhìn
+                    document.querySelector('.product-layout').scrollIntoView({ behavior: 'smooth' });
+                })
+                .catch(error => {
+                    console.error('Filter error:', error);
+                    alert('Lỗi tải sản phẩm!');
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    document.getElementById('productGrid').style.opacity = '1';
+                });
+        }
+
+        // Render lại Grid sản phẩm
+        function updateProductGrid(products) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = ''; 
+            if (products.length > 0) {
+                products.forEach(product => {
+                    // Tính toán logic hiển thị giá
+                    let priceHtml = '';
+                    if (product.oldPrice && product.oldPrice > product.price) {
+                        const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice * 100));
+                        priceHtml = `
+                            <span class="old-price">₫${product.oldPrice.toLocaleString('vi-VN')}</span>
+                            <span class="discount">-${discount}%</span>
+                            <span class="price">₫${(product.price || 0).toLocaleString('vi-VN')}</span>
+                        `;
+                    } else {
+                        priceHtml = `<span class="price">₫${(product.price || 0).toLocaleString('vi-VN')}</span>`;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.dataset.id = product._id;
+                    card.innerHTML = `
+                        <img src="${product.mainImage || '/image/icon/no-image.png'}" alt="${product.name}">
+                        <h4>${product.name}</h4>
+                        <div class="brand">${product.brand || ''}</div>
+                        <div class="price-wrapper">${priceHtml}</div>
+                    `;
+                    
+                    card.addEventListener('click', (e) => {
+                        if (!e.target.closest('.add-btn')) {
+                            window.location.href = `/product-detail/${product._id}`;
+                        }
+                    });
+                    grid.appendChild(card);
+                });
+            } else {
+                grid.innerHTML = '<p>Không tìm thấy sản phẩm nào phù hợp.</p>';
+            }
+        }
+
+        // Render lại Pagination bằng JS
+        function updatePagination(data) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            // data.totalPages đến từ JSON của Controller
+            if (data.totalPages > 1) {
+                pagination.style.display = 'flex'; // Hiện pagination
+
+                // Nút Previous
+                if (data.currentPage > 1) {
+                    const prev = createPageLink('« Trước', data.currentPage - 1);
+                    pagination.appendChild(prev);
+                }
+
+                // Các nút số
+                for (let i = 1; i <= data.totalPages; i++) {
+                    const pageLink = createPageLink(i, i);
+                    if (i === data.currentPage) pageLink.classList.add('active');
+                    pagination.appendChild(pageLink);
+                }
+
+                // Nút Next
+                if (data.currentPage < data.totalPages) {
+                    const next = createPageLink('Tiếp »', data.currentPage + 1);
+                    pagination.appendChild(next);
+                }
+            } else {
+                pagination.style.display = 'none';
+            }
+        }
+
+        // Helper tạo link phân trang
+        function createPageLink(text, pageNum) {
+            const a = document.createElement('a');
+            a.href = `?page=${pageNum}`; // Vẫn giữ href để chuột phải mở tab mới được
+            a.className = typeof text === 'number' ? 'page-number' : 'page-btn';
+            a.innerHTML = text;
+            a.onclick = (e) => {
+                e.preventDefault(); // Chặn reload trang
+                loadPage(pageNum);
+            };
+            return a;
+        }
+
+        function updateCount(total) {
+            const count = document.querySelector('.count');
+            // Nếu thẻ count chưa tồn tại (khi chưa search), ta có thể tạo nó hoặc bỏ qua
+            if (count) count.innerHTML = `Tìm thấy ${total} sản phẩm`;
+        }
+
+        // Event Listeners cho Checkbox
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+
+        // Back/Forward Browser Button Support
+        window.addEventListener('popstate', function (e) {
+            if (e.state) {
+                // Restore checkbox status
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                
+                if (e.state.brands) e.state.brands.forEach(b => {
+                     const el = document.querySelector(`input[name="brand"][value="${b}"]`);
+                     if(el) el.checked = true;
+                });
+                if (e.state.bikeTypes) e.state.bikeTypes.forEach(t => {
+                     const el = document.querySelector(`input[name="bike-type"][value="${t}"]`);
+                     if(el) el.checked = true;
+                });
+                // ... (Restore priceRanges tương tự)
+                
+                // Load data theo state
+                loadData(e.state.page || 1);
+            }
+        });
+    </script>
+</body>
+</html>

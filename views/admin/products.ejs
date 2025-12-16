@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= title %>
+  </title>
+  <link rel="stylesheet" href="/style/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+      .admin-avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e7ff;
+    }
+</style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <span>Admin Beru Bike</span>
+      </div>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="/admin">Dashboard</a></li>
+          <li><a href="/admin/products" class="active">Sản phẩm</a></li>
+          <li><a href="/admin/users">Người dùng</a></li>
+          <li><a href="/admin/orders">Đơn hàng</a></li>
+          <!-- <li><a href="/admin/reports">Báo cáo</a></li> -->
+        </ul>
+      </nav>
+      <div class="user-profile">
+        <% if (user.avatar && user.avatar.trim() !=='' ) { %>
+          <img src="<%= user.avatar %>" alt="Admin Avatar" class="admin-avatar-img">
+          <% } else { %>
+            <div class="avatar-circle">
+              <%= user.firstName.charAt(0).toUpperCase() %>
+            </div>
+            <% } %>
+
+              <div class="user-info-text">
+                <span class="u-name">
+                  <%= user.firstName %>
+                    <%= user.lastName %>
+                </span>
+                <span class="u-role">Administrator</span>
+              </div>
+              <a href="/auth/logout" class="logout-btn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="/admin/products" class="active"><i class="fas fa-box"></i> Sản phẩm</a></li>
+      <li><a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Đơn hàng</a></li>
+      <li><a href="/admin/users"><i class="fas fa-users"></i> Khách hàng</a></li>
+      <!-- <li><a href="/admin/reports"><i class="fas fa-chart-line"></i> Báo cáo</a></li> -->
+      <li style="margin-top: auto;"><a href="/admin/settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <h1 class="page-title">Quản lý sản phẩm</h1>
+      <p class="page-subtitle">Danh sách sản phẩm hiện có</p>
+
+      <!-- Quick Action Button -->
+      <div class="quick-actions">
+        <a href="/admin/products/add" class="btn btn-primary">
+          ➕ Thêm sản phẩm mới
+        </a>
+      </div>
+
+      <!-- Products Table -->
+      <section class="products-section">
+        <div class="table-container">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Hình ảnh</th>
+                <th>Tên</th>
+                <th>Giá</th>
+                <th>Thương hiệu</th>
+                <th>Số lượng tồn kho</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% products.forEach(p=> { %>
+                <tr>
+                  <td class="product-image-cell">
+                    <% if (p.mainImage) { %>
+                      <img src="<%= p.mainImage %>" alt="<%= p.name %>" class="product-thumbnail">
+                      <% } else { %>
+                        <span>Chưa có ảnh</span>
+                        <% } %>
+                  </td>
+                  <td>
+                    <%= p.name %>
+                  </td>
+                  <td>
+                    <%= p.price.toLocaleString() %> VNĐ
+                  </td>
+                  <td>
+                    <%= p.brand %>
+                  </td>
+                  <td class="stock-cell">
+                    <strong>
+                      <%= p.stock || 0 %> cái
+                    </strong> <!--  Hiển thị số lượng tồn kho với đơn vị "cái" và bold để nổi bật -->
+                  </td>
+                  <td>
+                    <a href="/admin/products/edit/<%= p._id %>" class="btn btn-secondary btn-small">Sửa</a>
+                    <a href="/admin/products/delete/<%= p._id %>" class="btn btn-danger btn-small">Xóa</a>
+                  </td>
+                </tr>
+                <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Admin Panel. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Script cho toggle sidebar nếu cần -->
+  <script>
+    // Ví dụ: Toggle sidebar trên mobile
+    document.addEventListener('DOMContentLoaded', function () {
+      const sidebar = document.querySelector('.sidebar');
+      const toggleBtn = document.querySelector('.toggle-sidebar'); // Thêm button nếu cần
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      .admin-avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e7ff;
+    }
+</style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <span>Admin Beru Bike</span>
+      </div>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="/admin">Dashboard</a></li>
+          <li><a href="/admin/products">Sản phẩm</a></li>
+          <li><a href="/admin/users">Người dùng</a></li>
+          <li><a href="/admin/orders">Đơn hàng</a></li>
+          <!-- <li><a href="/admin/reports">Báo cáo</a></li> -->
+        </ul>
+      </nav>
+      <div class="user-profile">
+        <% if (user.avatar && user.avatar.trim() !=='' ) { %>
+          <img src="<%= user.avatar %>" alt="Admin Avatar" class="admin-avatar-img">
+          <% } else { %>
+            <div class="avatar-circle">
+              <%= user.firstName.charAt(0).toUpperCase() %>
+            </div>
+            <% } %>
+
+              <div class="user-info-text">
+                <span class="u-name">
+                  <%= user.firstName %>
+                    <%= user.lastName %>
+                </span>
+                <span class="u-role">Administrator</span>
+              </div>
+              <a href="/auth/logout" class="logout-btn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="/admin/products"class="active"><i class="fas fa-box"></i> Sản phẩm</a></li>
+      <li><a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Đơn hàng</a></li>
+      <li><a href="/admin/users"><i class="fas fa-users"></i> Khách hàng</a></li>
+      <!-- <li><a href="/admin/reports"><i class="fas fa-chart-line"></i> Báo cáo</a></li> -->
+      <li style="margin-top: auto;"><a href="/admin/settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="container">
+      <h1 class="page-title">Chỉnh sửa sản phẩm</h1>
+      <p class="page-subtitle">Cập nhật thông tin sản phẩm</p>
+
+      <section class="form-section">
+        <div class="form-container">
+          <form action="/admin/products/edit/<%= product._id %>" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="name">Tên sản phẩm:</label>
+              <input type="text" id="name" name="name" value="<%= product.name || '' %>" required>
+            </div>
+
+            <div class="form-group">
+              <label for="brand">Thương hiệu:</label>
+              <input type="text" id="brand" name="brand" value="<%= product.brand || '' %>" required>
+            </div>
+
+            <div class="form-group">
+              <label for="loaiXe">Loại xe:</label>
+              <select id="loaiXe" name="loaiXe" required>
+                <option value="">Chọn loại xe</option>
+                <option value="xe đạp cho trẻ em" <%= product.loaiXe === 'xe đạp cho trẻ em' ? 'selected' : '' %>>Xe đạp cho trẻ em</option>
+                <option value="xe đạp địa hình" <%= product.loaiXe === 'xe đạp địa hình' ? 'selected' : '' %>>Xe đạp địa hình</option>
+                <option value="xe đạp đua" <%= product.loaiXe === 'xe đạp đua' ? 'selected' : '' %>>Xe đạp đua</option>
+                <option value="xe đạp thể thao" <%= product.loaiXe === 'xe đạp thể thao' ? 'selected' : '' %>>Xe đạp thể thao</option>
+                <option value="xe đạp đô thị" <%= product.loaiXe === 'xe đạp đô thị' ? 'selected' : '' %>>Xe đạp đô thị</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="price">Giá hiện tại:</label>
+              <input type="number" id="price" name="price" value="<%= product.price %>" required min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+              <label for="oldPrice">Giá cũ (tùy chọn):</label>
+              <input type="number" id="oldPrice" name="oldPrice" value="<%= product.oldPrice || 0 %>" min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+              <label for="stock">Tồn kho:</label>
+              <input type="number" id="stock" name="stock" value="<%= product.stock || 0 %>" min="0">
+            </div>
+
+            <div class="form-group">
+              <label for="desc">Mô tả:</label>
+              <textarea id="desc" name="desc" rows="4"><%= product.description || '' %></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="mainImage">Ảnh chính (upload mới nếu muốn thay đổi):</label>
+              <input type="file" id="mainImage" name="mainImage" accept="image/*">
+              <% if (product.mainImage) { %>
+                <div class="current-image">
+                  <p>Ảnh chính hiện tại:</p>
+                  <img src="<%= product.mainImage %>" alt="<%= product.name %>" style="max-width: 200px; height: auto; border-radius: 5px;">
+                </div>
+              <% } %>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
+              <a href="/admin/products" class="btn btn-secondary">Quay lại danh sách</a>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Admin Panel. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.querySelector('.sidebar');
+      const toggleBtn = document.querySelector('.toggle-sidebar');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

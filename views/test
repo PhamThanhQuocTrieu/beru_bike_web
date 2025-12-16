@@ -1,0 +1,70 @@
+<!-- BEST SELLERS BANNER -->
+<!-- <section class="bestseller-banner-section">
+  <img src="../public/image/Slider/banner-home-ctkm-pc-2000-1500.png" alt="Top Sản Phẩm Bán Chạy" class="banner-img">
+  <div class="content-overlay">
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="discount-badge">-9%</div>
+        <img src="../public/image/Giant/giant_m1lam.jpg" alt="Xe Đạp Dã Hình MTB RAPTOR Marlin 2" class="product-img">
+        <div class="product-info">
+          <h4>Xe Đạp Dã Hình MTB RAPTOR Marlin 2 - Phanh Đĩa...</h4>
+          <div class="price-box">8.990.000 VNĐ</div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="discount-badge">-14%</div>
+        <img src="../public/image/Giant/giant_m3xanh.jpg" alt="Xe Đạp Dã Hình MTB RAPTOR Evo" class="product-img">
+        <div class="product-info">
+          <h4>Xe Đạp Dã Hình MTB RAPTOR Evo - Phanh Đĩa...</h4>
+          <div class="price-box">8.790.000 VNĐ</div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="discount-badge">-40%</div>
+        <img src="../public/image/Giant/giant_c1do.jpg" alt="Xe Đạp Trẻ Em Youth MAX BIKE 12" class="product-img">
+        <div class="product-info">
+          <h4>Xe Đạp Trẻ Em Youth MAX BIKE 12 - Bánh 12 Inches</h4>
+          <div class="price-box">1.190.000 VNĐ</div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="discount-badge">-35%</div>
+        <img src="../public/image/Giant/giant_m2trang.jpg" alt="Xe Đạp Dã Hình MTB VINBIKE Lava 2" class="product-img">
+        <div class="product-info">
+          <h4>Xe Đạp Dã Hình MTB VINBIKE Lava 2 - Phanh Đĩa...</h4>
+          <div class="price-box">4.490.000 VNĐ</div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="discount-badge">-22%</div>
+        <img src="../public/image/Giant/giant_m1lam.jpg" alt="Xe Đạp Đường Phố Touring GTX Delta" class="product-img">
+        <div class="product-info">
+          <h4>Xe Đạp Đường Phố Touring GTX Delta - Phanh Đĩa Bánh...</h4>
+          <div class="price-box">11.790.000 VNĐ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<!-- CUSTOMER REVIEWS (unchanged) -->
+<!-- <section class="reviews-section">
+  <h2>Khách hàng nói gì</h2>
+  <div class="review-grid">
+    <div class="review-card">
+      <img src="https://i.pravatar.cc/80?img=12" alt="Avatar">
+      <p>"Tôi mua xe thể thao ở đây, đi rất êm và bền. Nhân viên tư vấn nhiệt tình!"</p>
+      <h5>- Anh Minh, Cần Thơ</h5>
+    </div>
+    <div class="review-card">
+      <img src="https://i.pravatar.cc/80?img=33" alt="Avatar">
+      <p>"Mua xe cho con trai, bé rất thích. Giao hàng nhanh, đóng gói cẩn thận."</p>
+      <h5>- Chị Hương, TP.HCM</h5>
+    </div>
+    <div class="review-card">
+      <img src="https://i.pravatar.cc/80?img=22" alt="Avatar">
+      <p>"Xe đạp chất lượng cao, giá tốt hơn nhiều nơi. Sẽ giới thiệu cho bạn bè!"</p>
+      <h5>- Anh Tân, Long Xuyên</h5>
+    </div>
+  </div>
+</section> -->

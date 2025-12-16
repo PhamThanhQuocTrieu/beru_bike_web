@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Beru Bike</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/style/admin.css">
+  <link rel="stylesheet" href="/style/dashboard.css">
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <span>Admin Beru Bike</span>
+      </div>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="/admin" class="active">Dashboard</a></li>
+          <li><a href="/admin/products">Sản phẩm</a></li>
+          <li><a href="/admin/orders">Đơn hàng</a></li>
+          <li><a href="/admin/users">Khách hàng</a></li>
+          <!-- <li><a href="/admin/reports">Báo cáo</a></li> -->
+        </ul>
+      </nav>
+
+      <div class="user-profile">
+        <% if (user.avatar && user.avatar.trim() !=='' ) { %>
+          <img src="<%= user.avatar %>" alt="Admin Avatar" class="admin-avatar-img">
+        <% } else { %>
+          <div class="avatar-circle">
+            <%= user.firstName.charAt(0).toUpperCase() %>
+          </div>
+        <% } %>
+
+        <div class="user-info-text">
+          <span class="u-name">
+            <%= user.firstName %> <%= user.lastName %>
+          </span>
+          <span class="u-role">Administrator</span>
+        </div>
+        <a href="/auth/logout" class="logout-btn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="/admin/dashboard" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="/admin/products"><i class="fas fa-box"></i> Sản phẩm</a></li>
+      <li><a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Đơn hàng</a></li>
+      <li><a href="/admin/users"><i class="fas fa-users"></i> Khách hàng</a></li>
+      <!-- <li><a href="/admin/reports"><i class="fas fa-chart-line"></i> Báo cáo</a></li> -->
+      <li style="margin-top: auto;"><a href="/admin/settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="dashboard-container">
+
+      <div class="welcome-header">
+        <div class="welcome-text">
+          <h1>Xin chào, <%= user.lastName %>!</h1>
+          <p>Đây là tổng quan tình hình kinh doanh của cửa hàng hôm nay.</p>
+        </div>
+        <div class="date-badge">
+          <i class="far fa-calendar-alt"></i>
+          <%= new Date().toLocaleDateString('vi-VN', { weekday: 'long' , year: 'numeric' , month: 'long' , day: 'numeric' }) %>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-head">
+            <span class="stat-title">Doanh thu</span>
+            <div class="stat-icon icon-revenue"><i class="fas fa-wallet"></i></div>
+          </div>
+          <div class="stat-value">
+            <%= stats.revenue.toLocaleString('vi-VN') %> ₫
+          </div>
+          <div class="stat-trend">
+            <!-- <span class="trend-up"><i class="fas fa-arrow-up"></i> +12.5%</span>
+            <span class="trend-neutral"> so với tháng trước</span> -->
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-head">
+            <span class="stat-title">Đơn hàng mới</span>
+            <div class="stat-icon icon-orders"><i class="fas fa-shopping-bag"></i></div>
+          </div>
+          <div class="stat-value">
+            <%= stats.orders || 0 %>
+          </div>
+          <div class="stat-trend">
+            <!-- <span class="trend-up"><i class="fas fa-arrow-up"></i> +5%</span>
+            <span class="trend-neutral"> so với tuần trước</span> -->
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-head">
+            <span class="stat-title">Tổng sản phẩm</span>
+            <div class="stat-icon icon-products"><i class="fas fa-cube"></i></div>
+          </div>
+          <div class="stat-value">
+            <%= stats.products %>
+          </div>
+          <div class="stat-trend">
+            <span class="trend-neutral">Đang kinh doanh</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-head">
+            <span class="stat-title">Khách hàng</span>
+            <div class="stat-icon icon-users"><i class="fas fa-user-friends"></i></div>
+          </div>
+          <div class="stat-value">
+            <%= stats.users %>
+          </div>
+          <div class="stat-trend">
+            <!-- <span class="trend-up"><i class="fas fa-arrow-up"></i> +3</span>
+            <span class="trend-neutral"> mới hôm nay</span> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+        
+        <div class="card-box" style="grid-column: span 2;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 class="card-title" style="margin: 0;"><i class="fas fa-chart-line" style="color: #10b981;"></i> Biểu đồ doanh thu (7 ngày)</h3>
+            </div>
+            <div style="height: 300px; width: 100%;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card-box">
+          <h3 class="card-title"><i class="fas fa-bolt" style="color: #f59e0b;"></i> Thao tác nhanh</h3>
+          <div class="action-list">
+            <a href="/admin/products/add" class="action-btn">
+              <i class="fas fa-plus-circle"></i>
+              <span>Thêm Sản Phẩm</span>
+            </a>
+            <a href="/admin/orders" class="action-btn">
+              <i class="fas fa-list-alt"></i>
+              <span>Xem Đơn Hàng</span>
+            </a>
+            <a href="/admin/users/add" class="action-btn">
+              <i class="fas fa-user-plus"></i>
+              <span>Thêm User</span>
+            </a>
+            <a href="/admin/reports" class="action-btn">
+              <i class="fas fa-chart-pie"></i>
+              <span>Xem Báo Cáo</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card-box">
+          <h3 class="card-title"><i class="fas fa-history" style="color: #6366f1;"></i> Hoạt động gần đây</h3>
+           <div class="activity-list">
+             <% if(recentActivity && recentActivity.length > 0) { %>
+                <% recentActivity.forEach(order => { %>
+                  <div class="activity-item" style="display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
+                    <div class="act-icon" style="background: #eef2ff; color: #6366f1; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-shopping-bag"></i></div>
+                    <div class="act-content">
+                      <div class="act-text">
+                        Đơn hàng <strong>#<%= order._id.toString().slice(-6).toUpperCase() %></strong> 
+                        <br>
+                        <span style="font-size: 0.85rem; color: #666;">
+                            <%= order.totalPrice.toLocaleString('vi-VN') %>₫ - 
+                            <%= order.userId ? (order.userId.lastName + ' ' + order.userId.firstName) : 'Khách lẻ' %>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                <% }) %>
+             <% } else { %>
+                <p style="color: #888;">Chưa có hoạt động nào.</p>
+             <% } %>
+           </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggle = document.querySelector('.toggle-sidebar');
+      const sidebar = document.querySelector('.sidebar');
+      if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+
+      // --- CHART CONFIGURATION ---
+      // Lấy dữ liệu từ Server EJS truyền xuống
+      const labels = <%- JSON.stringify(chartData.labels) %>;
+      const dataRevenue = <%- JSON.stringify(chartData.data) %>;
+
+      const ctx = document.getElementById('revenueChart').getContext('2d');
+      
+      new Chart(ctx, {
+        type: 'line', // Dạng biểu đồ đường
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Doanh thu (VNĐ)',
+            data: dataRevenue,
+            borderColor: '#6366f1', // Màu tím chủ đạo
+            backgroundColor: 'rgba(99, 102, 241, 0.1)', // Màu nền nhạt dưới đường
+            borderWidth: 2,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: '#6366f1',
+            pointRadius: 4,
+            tension: 0.3, // Độ cong mềm mại
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }, // Ẩn chú thích nếu chỉ có 1 đường
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.raw.toLocaleString('vi-VN') + ' ₫';
+                    }
+                }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { borderDash: [2, 4], color: '#f3f4f6' },
+              ticks: {
+                callback: function(value) {
+                  // Rút gọn số tiền (VD: 1tr thay vì 1.000.000)
+                  if(value >= 1000000) return (value/1000000) + 'tr';
+                  if(value >= 1000) return (value/1000) + 'k';
+                  return value;
+                }
+              }
+            },
+            x: {
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

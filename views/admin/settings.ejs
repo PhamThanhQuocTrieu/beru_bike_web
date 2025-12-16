@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cài đặt hệ thống - Admin</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/style/admin.css">
+  <link rel="stylesheet" href="/style/settings.css">
+
+
+  <style>
+      .admin-avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e7ff;
+    }
+</style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-container">
+      <div class="logo"><span>Admin Beru Bike</span></div>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="/admin">Dashboard</a></li>
+          <li><a href="/admin/products">Sản phẩm</a></li>
+          <li><a href="/admin/users">Người dùng</a></li>
+          <li><a href="/admin/orders">Đơn hàng</a></li>
+          <!-- <li><a href="/admin/reports" class="active">Báo cáo</a></li> -->
+        </ul>
+      </nav>
+      <div class="user-profile">
+        <% if (user.avatar && user.avatar.trim() !=='' ) { %>
+          <img src="<%= user.avatar %>" alt="Admin Avatar" class="admin-avatar-img">
+          <% } else { %>
+            <div class="avatar-circle">
+              <%= user.firstName.charAt(0).toUpperCase() %>
+            </div>
+            <% } %>
+
+              <div class="user-info-text">
+                <span class="u-name">
+                  <%= user.firstName %>
+                    <%= user.lastName %>
+                </span>
+                <span class="u-role">Administrator</span>
+              </div>
+              <a href="/auth/logout" class="logout-btn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="/admin/products"><i class="fas fa-box"></i> Sản phẩm</a></li>
+      <li><a href="/admin/orders" ><i class="fas fa-shopping-cart"></i> Đơn hàng</a></li>
+      <li><a href="/admin/users"><i class="fas fa-users"></i> Khách hàng</a></li>
+      <!-- <li><a href="/admin/reports" ><i class="fas fa-chart-line"></i> Báo cáo</a></li> -->
+      <li style="margin-top: auto;"><a href="/admin/settings" class="active"><i class="fas fa-cog"></i> Cài đặt</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="settings-container">
+      
+      <div class="settings-sidebar">
+        <div class="settings-menu-item active" onclick="switchTab('profile')">
+          <i class="fas fa-user-circle"></i> Hồ sơ cá nhân
+        </div>
+        <div class="settings-menu-item" onclick="switchTab('security')">
+          <i class="fas fa-lock"></i> Bảo mật & Mật khẩu
+        </div>
+        <div class="settings-menu-item" onclick="switchTab('store')">
+          <i class="fas fa-store"></i> Thông tin cửa hàng
+        </div>
+      </div>
+
+      <div class="settings-content">
+        
+        <% if (locals.message) { %>
+          <div style="padding: 20px 30px 0;">
+            <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= message %></div>
+          </div>
+        <% } %>
+        
+        <% if (locals.error) { %>
+          <div style="padding: 20px 30px 0;">
+            <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
+          </div>
+        <% } %>
+
+        <div id="profile" class="tab-pane active">
+          <div class="section-header">
+            <h2>Hồ sơ cá nhân</h2>
+            <p>Quản lý thông tin hiển thị và liên hệ của bạn.</p>
+          </div>
+
+          <form action="/admin/settings/profile" method="POST" enctype="multipart/form-data">
+            <div class="avatar-upload">
+              <img src="<%= user.avatar || '/image/icon/user.png' %>" alt="Avatar" class="avatar-preview" id="avatarPreview">
+              <div>
+                <h4 style="margin: 0 0 5px 0;">Ảnh đại diện</h4>
+                <div class="upload-btn-wrapper">
+                  <button class="btn-upload">Tải ảnh mới</button>
+                  <input type="file" name="avatar" accept="image/*" onchange="previewImage(this)">
+                </div>
+                <p style="font-size: 12px; color: #9ca3af; margin-top: 5px;">JPG, GIF hoặc PNG. Tối đa 2MB.</p>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Họ (First Name)</label>
+                <input type="text" name="firstName" class="form-control" value="<%= user.firstName %>" required>
+              </div>
+              <div class="form-group">
+                <label>Tên (Last Name)</label>
+                <input type="text" name="lastName" class="form-control" value="<%= user.lastName %>" required>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label>Email (Không thể thay đổi)</label>
+              <input type="email" class="form-control" value="<%= user.email %>" disabled style="background: #f3f4f6; color: #6b7280;">
+            </div>
+
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="text" name="phone" class="form-control" value="<%= user.phone %>">
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-save">Lưu thay đổi</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="security" class="tab-pane">
+          <div class="section-header">
+            <h2>Đổi mật khẩu</h2>
+            <p>Để bảo mật, vui lòng không chia sẻ mật khẩu cho người khác.</p>
+          </div>
+
+          <form action="/admin/settings/password" method="POST">
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label>Mật khẩu hiện tại</label>
+              <input type="password" name="currentPassword" class="form-control" placeholder="••••••••">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Mật khẩu mới</label>
+                <input type="password" name="newPassword" class="form-control" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label>Xác nhận mật khẩu mới</label>
+                <input type="password" name="confirmPassword" class="form-control" placeholder="••••••••">
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-save">Cập nhật mật khẩu</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="store" class="tab-pane">
+          <div class="section-header">
+            <h2>Thông tin cửa hàng</h2>
+            <p>Thông tin này sẽ hiển thị trên hóa đơn và email gửi khách.</p>
+          </div>
+          <form>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Tên cửa hàng</label>
+                <input type="text" class="form-control" value="Beru Bike Store">
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Địa chỉ</label>
+                <input type="text" class="form-control" value="123 Đường ABC, Quận XYZ, TP.HCM">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-save" onclick="alert('Tính năng đang phát triển')">Lưu cấu hình</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Logic chuyển Tab
+    function switchTab(tabId) {
+      // 1. Ẩn tất cả tab
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      // 2. Bỏ active menu cũ
+      document.querySelectorAll('.settings-menu-item').forEach(el => el.classList.remove('active'));
+      
+      // 3. Hiển thị tab mới
+      document.getElementById(tabId).classList.add('active');
+      // 4. Active menu mới (Tìm theo text hoặc index, ở đây dùng click event handler context đơn giản hơn)
+      // Trong thực tế có thể dùng ID cho menu item
+      event.currentTarget.classList.add('active');
+    }
+
+    // Logic xem trước ảnh upload
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('avatarPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
+</body>
+</html>

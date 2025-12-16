@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thông tin cá nhân - Beru Bike</title>
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"> -->
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/style/header.css">
+  <link rel="stylesheet" href="/style/profile.css">
+  <link rel="icon" type="image/x-icon" href="/image/logo/favicon.png">
+
+
+</head>
+
+<body>
+
+  <% let dobValue='' ; if (page==='info' && user.dob) { try { const d=new Date(user.dob); if (!isNaN(d.getTime())) {
+    const offset=d.getTimezoneOffset() * 60000; const localDate=new Date(d.getTime() - offset);
+    dobValue=localDate.toISOString().split('T')[0]; } } catch (e) { console.log(e); } } %>
+
+    <%- include('header') %>
+
+      <div class="profile-wrapper">
+
+        <aside class="profile-sidebar">
+          <div class="user-brief">
+            <img src="<%= (user.avatar && user.avatar.trim() !== '') ? user.avatar : '/image/icon/user.png' %>"
+              alt="Avatar" class="user-brief-avatar" id="sidebarAvatar">
+            <div class="user-brief-info">
+              <h3>
+                <%= (user.firstName || '' ) + ' ' + (user.lastName || 'User' ) %>
+              </h3>
+              <a href="/profile"><i class="fas fa-pen"></i> Sửa hồ sơ</a>
+            </div>
+          </div>
+
+          <nav class="sidebar-menu">
+            <ul>
+              <li><a href="/profile" class="<%= page === 'info' ? 'active' : '' %>">
+                  <img src="/image/icon/user.png" class="sidebar-icon" alt=""> <span>Tài khoản của tôi</span>
+                </a></li>
+
+              <li><a href="/checkout/orders/list">
+                  <img src="/image/icon/cart.png" class="sidebar-icon" alt=""> <span>Đơn mua</span>
+                </a></li>
+
+              <li><a href="/profile/change-password" class="<%= page === 'change-password' ? 'active' : '' %>">
+                  <img src="/image/icon/lock.png" class="sidebar-icon" alt=""> <span>Đổi mật khẩu</span>
+                </a></li>
+
+              <li><a href="#">
+                  <img src="/image/icon/setting.png" class="sidebar-icon" alt=""> <span>Cài đặt</span>
+                </a></li>
+
+              <li><a href="#">
+                  <img src="/image/icon/notification.png" class="sidebar-icon" alt=""> <span>Thông báo</span>
+                </a></li>
+
+              <li><a href="#">
+                  <img src="/image/icon/voucher.png" class="sidebar-icon" alt=""> <span>Kho Voucher</span>
+                </a></li>
+            </ul>
+          </nav>
+        </aside>
+
+        <main class="profile-content-card">
+
+          <% if (messages && messages.success && messages.success.length> 0) { %>
+            <div class="alert-box alert-success" id="successAlert">
+              <i class="fas fa-check-circle"></i>
+              <%= messages.success %>
+            </div>
+            <% } %>
+              <% if (messages && messages.error && messages.error.length> 0) { %>
+                <div class="alert-box alert-error" id="errorAlert">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <%= messages.error %>
+                </div>
+                <% } %>
+
+                  <form <% if (page==='change-password' ) { %>
+                    action="/auth/profile/change-password"
+                    <% } else { %>
+                      action="/auth/profile/update"
+                      enctype="multipart/form-data"
+                      <% } %>
+                        method="POST"
+                        class="profile-form-wrapper"
+                        >
+
+                        <% if (page==='info' ) { %>
+                          <div class="card-header">
+                            <h1>Hồ sơ của tôi</h1>
+                            <p><b>Quản lý thông tin hồ sơ để bảo mật tài khoản</b></p>
+                          </div>
+
+                          <div class="profile-layout">
+
+                            <div class="form-section">
+                              <div class="form-group">
+                                <label>Họ & Tên</label>
+                                <div class="input-wrapper" style="display: flex; gap: 10px;">
+                                  <input type="text" id="lastName" name="lastName" value="<%= user.lastName || '' %>"
+                                    class="form-control" placeholder="Họ" required readonly>
+                                  <input type="text" id="firstName" name="firstName" value="<%= user.firstName || '' %>"
+                                    class="form-control" placeholder="Tên" required readonly>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label>Email</label>
+                                <div class="input-wrapper">
+                                  <span style="display: block; padding: 10px 0; font-size: 14px;">
+                                    <%= user.email %> <a href="#"
+                                        
+                                  </span>
+                                  <input type="hidden" name="email" value="<%= user.email %>">
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label>Số điện thoại</label>
+                                <div class="input-wrapper">
+                                  <input type="tel" id="phone" name="phone" value="<%= user.phone || '' %>"
+                                    class="form-control" readonly>
+                                </div>
+                              </div>
+
+                              <!-- <div class="form-group">
+                                <label>Địa chỉ</label>
+                                <div class="input-wrapper">
+                                  <input type="text" id="address" name="address" value="<%= user.address || '' %>"
+                                    class="form-control" placeholder="Địa chỉ nhận hàng" readonly>
+                                </div>
+                              </div> -->
+
+                              <div class="form-group">
+                                <label>Giới tính</label>
+                                <div class="input-wrapper">
+                                  <select id="gender" name="gender" class="form-control" disabled
+                                    style="background: transparent; border: none; -webkit-appearance: none;">
+                                    <option value="" <%=(!user.gender) ? 'selected' : '' %>>Chưa chọn</option>
+                                    <option value="male" <%=(user.gender==='male' ) ? 'selected' : '' %>>Nam</option>
+                                    <option value="female" <%=(user.gender==='female' ) ? 'selected' : '' %>>Nữ</option>
+                                    <option value="other" <%=(user.gender==='other' ) ? 'selected' : '' %>>Khác</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label>Ngày sinh</label>
+                                <div class="input-wrapper">
+                                  <input type="date" id="dob" name="dob" value="<%= dobValue %>" class="form-control"
+                                    readonly>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label></label>
+                                <div class="input-wrapper">
+                                  <button type="button" id="editBtn" class="btn-primary">Chỉnh sửa</button>
+                                  <button type="submit" id="saveBtn" class="btn-primary"
+                                    style="display: none;">Lưu</button>
+                                  <button type="button" id="cancelBtn" class="btn-secondary"
+                                    style="display: none;">Hủy</button>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="avatar-section">
+                              <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;"
+                                disabled />
+
+                              <label for="avatarInput" class="avatar-wrapper">
+                                <img id="avatarPreview"
+                                  src="<%= (user.avatar && user.avatar.trim() !== '') ? user.avatar : '/image/icon/user.png' %>"
+                                  class="avatar-img" alt="Avatar">
+                                <div class="avatar-overlay">Sửa</div>
+                              </label>
+
+                              <button type="button" class="btn-select-photo"
+                                onclick="document.getElementById('avatarInput').click();" id="btnSelectPhoto"
+                                disabled>Chọn ảnh</button>
+
+                              <div class="avatar-note">
+                                Dụng lượng file tối đa 1 MB<br>
+                                Định dạng:.JPEG, .PNG
+                              </div>
+                            </div>
+                          </div>
+
+                          <% } else if (page==='change-password' ) { %>
+                            <div class="card-header">
+                              <h1>Đổi mật khẩu</h1>
+                              <p>Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
+                            </div>
+
+                            <div style="max-width: 600px;">
+                              <div class="form-group">
+                                <label>Mật khẩu hiện tại</label>
+                                <div class="input-wrapper">
+                                  <input type="password" id="currentPassword" name="currentPassword"
+                                    class="form-control" required>
+                                  <span class="eye-toggle" onclick="togglePassword('currentPassword', this)"><i
+                                      class="fas fa-eye-slash"></i></span>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label>Mật khẩu mới</label>
+                                <div class="input-wrapper">
+                                  <input type="password" id="newPassword" name="newPassword" class="form-control"
+                                    required minlength="8">
+                                  <span class="eye-toggle" onclick="togglePassword('newPassword', this)"><i
+                                      class="fas fa-eye-slash"></i></span>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label>Xác nhận mật khẩu</label>
+                                <div class="input-wrapper">
+                                  <input type="password" id="confirmPassword" name="confirmPassword"
+                                    class="form-control" required minlength="8">
+                                  <span class="eye-toggle" onclick="togglePassword('confirmPassword', this)"><i
+                                      class="fas fa-eye-slash"></i></span>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label></label>
+                                <div class="input-wrapper">
+                                  <button type="submit" class="btn-primary">Xác nhận</button>
+                                  <a href="/profile" style="text-decoration: none;" class="btn-secondary">Quay lại</a>
+                                </div>
+                              </div>
+                            </div>
+                            <% } %>
+
+                  </form>
+        </main>
+      </div>
+
+      <script>
+        var page = '<%= page || "" %>';
+
+        // Toggle password visibility
+        function togglePassword(inputId, spanEl) {
+          const input = document.getElementById(inputId);
+          const icon = spanEl.querySelector('i');
+          if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fas fa-eye';
+          } else {
+            input.type = 'password';
+            icon.className = 'fas fa-eye-slash';
+          }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+          // Auto-hide alerts
+          const alerts = document.querySelectorAll('.alert-box');
+          alerts.forEach(alert => {
+            setTimeout(() => { alert.style.display = 'none'; }, 5000);
+          });
+
+          if (page === 'info') {
+            // --- LOGIC EDIT PROFILE ---
+            const editBtn = document.getElementById('editBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const btnSelectPhoto = document.getElementById('btnSelectPhoto');
+            const avatarInput = document.getElementById('avatarInput');
+            const avatarPreview = document.getElementById('avatarPreview');
+
+            const formInputs = document.querySelectorAll('.form-section input[readonly], .form-section select[disabled]');
+            const originalValues = {};
+            formInputs.forEach(input => originalValues[input.id] = input.value);
+            const originalAvatarSrc = avatarPreview.src;
+
+            editBtn.addEventListener('click', () => {
+              formInputs.forEach(input => {
+                if (input.name !== 'email') {
+                  input.removeAttribute('readonly');
+                  input.removeAttribute('disabled');
+                  input.style.border = '1px solid #555';
+                  if (input.tagName === 'SELECT') {
+                    input.style.background = '#fff';
+                    input.style.border = '1px solid rgba(0,0,0,.14)';
+                    input.style.webkitAppearance = 'menulist';
+                  }
+                }
+              });
+              avatarInput.removeAttribute('disabled');
+              btnSelectPhoto.removeAttribute('disabled');
+              editBtn.style.display = 'none';
+              saveBtn.style.display = 'inline-block';
+              cancelBtn.style.display = 'inline-block';
+            });
+
+            cancelBtn.addEventListener('click', () => {
+              formInputs.forEach(input => {
+                if (input.name !== 'email') {
+                  input.value = originalValues[input.id];
+                  if (input.tagName === 'SELECT') {
+                    input.setAttribute('disabled', true);
+                    input.style.background = 'transparent';
+                    input.style.border = 'none';
+                    input.style.webkitAppearance = 'none';
+                  } else {
+                    input.setAttribute('readonly', true);
+                    input.style.border = '1px solid rgba(0,0,0,.14)';
+                    input.style.borderColor = 'transparent';
+                  }
+                }
+              });
+              avatarPreview.src = originalAvatarSrc;
+              avatarInput.value = '';
+              avatarInput.setAttribute('disabled', true);
+              btnSelectPhoto.setAttribute('disabled', true);
+              editBtn.style.display = 'inline-block';
+              saveBtn.style.display = 'none';
+              cancelBtn.style.display = 'none';
+            });
+
+            avatarInput.addEventListener('change', function (e) {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                  avatarPreview.src = evt.target.result;
+                }
+                reader.readAsDataURL(file);
+              }
+            });
+          }
+        });
+      </script>
+
+</body>
+
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title || 'Đăng nhập tài khoản' %>
+    </title>
+    <link rel="stylesheet" href="/style/login.css">
+    <link rel="icon" type="image/x-icon" href="/image/logo/favicon.png">
+
+</head>
+
+<body>
+    <% /* Flash messages: Ẩn mặc định, chỉ hiển thị khi có error/success từ controller */ %>
+        <% if (messages && messages.success) { %>
+            <div class="alert alert-success" role="alert">
+                <%= messages.success %>
+            </div>
+            <% } %>
+                <% if (messages && messages.error) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= messages.error %>
+                    </div>
+                    <% } %>
+
+                        <header>
+                            <div class="breadcrumb">
+                                <a href="/">Trang chủ</a> | <a href="/auth/signup" class="active">Đăng ký tài khoản</a>
+                            </div>
+                        </header>
+
+                        <div class="container">
+                            <div class="login-box">
+                                <h2>Đăng nhập</h2>
+                                <p>Nếu bạn đã có tài khoản, vui lòng đăng nhập</p>
+                                <form id="loginForm">
+                                    <label for="email">Email hoặc SĐT *</label> <!-- Updated placeholder -->
+                                    <input type="text" id="email" name="email" placeholder="Email hoặc SĐT" required>
+                                    <!-- type="text" cho SĐT/email -->
+
+                                    <label for="password">Mật khẩu *</label>
+                                    <input type="password" id="password" name="password" required>
+
+                                    <p class="required">* Yêu cầu bắt buộc</p>
+                                    <button type="submit" class="login-btn">Đăng nhập</button>
+                                    <a href="#" class="forgot">Quên mật khẩu?</a>
+                                    <p id="error-message"></p>
+                                </form>
+                            </div>
+
+                            <div class="register-box">
+                                <h2>KHÁCH HÀNG MỚI</h2>
+                                <p>Bằng cách tạo một tài khoản với cửa hàng của chúng tôi, bạn sẽ có thể thực hiện những
+                                    quy trình mua hàng
+                                    nhanh hơn, lưu trữ nhiều địa chỉ gửi hàng, xem và theo dõi đơn đặt hàng của bạn
+                                    trong tài khoản của bạn
+                                    và nhiều hơn nữa.</p>
+                                <a href="/auth/signup"><button class="register-btn">Tạo tài khoản</button></a>
+                            </div>
+                        </div>
+
+                        <script>
+                            document.getElementById("loginForm").addEventListener("submit", async function (event) {
+                                event.preventDefault();
+
+                                const loginInput = document.getElementById("email").value.trim();  // Email hoặc SĐT
+                                const password = document.getElementById("password").value;
+                                const errorMessage = document.getElementById("error-message");
+
+                                // Frontend validation
+                                if (!loginInput || !password) {
+                                    errorMessage.style.color = "red";
+                                    errorMessage.textContent = "Vui lòng điền email/SĐT và mật khẩu!";
+                                    errorMessage.style.display = "block";
+                                    return;
+                                }
+
+                                try {
+                                    const response = await fetch("/auth/login", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ email: loginInput, password }),  // Gửi loginInput as email (backend check type)
+                                    });
+
+                                    const data = await response.json();
+
+                                    if (response.ok) {
+                                        errorMessage.style.color = "green";
+                                        errorMessage.textContent = data.message || "Đăng nhập thành công! Đang chuyển hướng...";
+                                        errorMessage.style.display = "block";
+                                        setTimeout(() => {
+                                            window.location.href = data.redirect || "/";
+                                        }, 1000);
+                                    } else {
+                                        errorMessage.style.color = "red";
+                                        errorMessage.textContent = data.message;
+                                        errorMessage.style.display = "block";
+                                    }
+                                } catch (error) {
+                                    errorMessage.style.color = "red";
+                                    errorMessage.textContent = "Lỗi kết nối đến server!";
+                                    errorMessage.style.display = "block";
+                                    console.error("Login error:", error);
+                                }
+                            });
+
+                            // Handle query param message (from signup redirect) - fallback nếu không dùng flash
+                            window.onload = function () {
+                                const params = new URLSearchParams(window.location.search);
+                                const alertMessage = params.get("alert");
+
+                                if (alertMessage && alertMessage.trim() !== "") {
+                                    const alertElement = document.getElementById("error-message");
+                                    if (alertElement) {
+                                        alertElement.style.color = "green";
+                                        alertElement.textContent = alertMessage;
+                                        alertElement.style.display = "block";
+                                    }
+
+                                    // Clear query param
+                                    const newUrl = window.location.origin + window.location.pathname;
+                                    window.history.replaceState({}, document.title, newUrl);
+                                }
+                            };
+                        </script>
+</body>
+
+</html>

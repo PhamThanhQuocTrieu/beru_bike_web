@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>
+    <%= title %>
+  </title>
+  <link rel="stylesheet" href="/style/index.css">
+  <link rel="stylesheet" href="/style/header.css">
+  <link rel="stylesheet" href="/style/footer.css">
+  <link rel="icon" type="image/x-icon" href="/image/logo/favicon.png">
+</head>
+
+<body>
+  <% /* Safe check for error: Chỉ hiển thị nếu error được truyền từ controller */ %>
+    <% if (typeof error !=='undefined' && error) { %>
+      <div style="color: red; padding: 10px; background: #ffe6e6; margin: 10px;">
+        <strong>Lỗi:</strong>
+        <%= error %>
+      </div>
+      <% } %>
+
+        <!-- Header -->
+        <%- include('header') %>
+
+
+          <!-- SLIDER -->
+          <div class="top-slider">
+            <div class="slides">
+              <div class="slide"><img src="/image/Slider/banner-web.jpg" alt="Banner 1"></div>
+              <div class="slide"><img src="/image/Slider/banner-tung-dong-xe-2025-04.jpg" alt="Banner 2"></div>
+              <div class="slide"><img src="/image/Slider/banner-tung-dong-xe-2025-05.jpg" alt="Banner 3"></div>
+              <div class="slide"><img src="/image/Slider/SUMMER-VIBE-RIDE-GIANT-2_BANNER-1.jpg" alt="Banner 4"></div>
+            </div>
+            <div class="dots">
+              <span class="active"></span><span></span><span></span><span></span>
+            </div>
+            <button class="arrow left" aria-label="Previous slide">&#10094;</button>
+            <button class="arrow right" aria-label="Next slide">&#10095;</button>
+          </div>
+
+          <!-- Section title -->
+          <section class="section-title">
+            <h2>Khám phá các dòng xe</h2>
+          </section>
+
+          <!-- HERO -->
+          <section class="hero">
+            <div class="hero-left">
+              <h2>Xe đạp Beru</h2>
+              <p>
+                Công ty cổ phần Beru Cần Thơ
+                được thành lập ngày 30/06/1960
+              </p>
+              <a href="#categories" class="btn">Tìm Hiểu Sản Phẩm</a>
+            </div>
+            <div class="hero-right">
+              <div class="hero-item">
+                <img src="/image/LoaiXe/bike.jpg" alt="Xe đạp phổ thông">
+                <p>Xe đạp phổ thông</p>
+              </div>
+              <div class="hero-item">
+                <img src="/image/LoaiXe/road.jpg" alt="Xe đạp thể thao">
+                <p>Xe đạp thể thao</p>
+              </div>
+              <div class="hero-item">
+                <img src="/image/LoaiXe/trem1.jpg" alt="Xe đạp trẻ em">
+                <p>Xe đạp trẻ em</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- XE ĐẠP TRẺ EM -->
+          <section class="category-section" id="categories">
+            <div class="section-header">
+              <h2>XE ĐẠP TRẺ EM</h2>
+              <a href="/products?category=trẻ em" class="view-all">Xem tất cả</a>
+            </div>
+            <div class="product-grid">
+              <% if (productsByCategory && productsByCategory['trẻ em'] && productsByCategory['trẻ em'].length> 0) { %>
+                <% productsByCategory['trẻ em'].forEach(product=> { %>
+                  <div class="product-card" data-id="<%= product._id %>">
+                    <img src="<%= product.mainImage %>" alt="<%= product.name %>">
+                    <h3>
+                      <%= product.name %>
+                    </h3>
+                    <p class="brand">
+                      <%= product.brand %>
+                    </p>
+                    <div class="price-wrapper">
+                      <div class="price">
+                        <span class="current-price">₫<%= (product.price || 0).toLocaleString('vi-VN') %></span>
+                        <% if (product.oldPrice && product.oldPrice> 0) { %>
+                          <span class="original-price">₫<%= product.oldPrice.toLocaleString('vi-VN') %></span>
+                          <% } %>
+                      </div>
+                    </div>
+                    <!-- Bỏ nút Thêm (add-to-cart) -->
+                  </div>
+                  <% }); %>
+                    <% } else { %>
+                      <p>Chưa có sản phẩm nào trong danh mục này.</p>
+                      <% } %>
+            </div>
+          </section>
+
+          <!-- XE ĐỊA HÌNH -->
+          <section class="category-section">
+            <div class="section-header">
+              <h2>XE ĐỊA HÌNH</h2>
+              <a href="/products?category=địa hình" class="view-all">Xem tất cả</a>
+            </div>
+            <div class="product-grid">
+              <% if (productsByCategory && productsByCategory['địa hình'] && productsByCategory['địa hình'].length> 0) {
+                %>
+                <% productsByCategory['địa hình'].forEach(product=> { %>
+                  <div class="product-card" data-id="<%= product._id %>">
+                    <img src="<%= product.mainImage %>" alt="<%= product.name %>">
+                    <h3>
+                      <%= product.name %>
+                    </h3>
+                    <p class="brand">
+                      <%= product.brand %>
+                    </p>
+                    <div class="price-wrapper">
+                      <div class="price">
+                        <span class="current-price">₫<%= (product.price || 0).toLocaleString('vi-VN') %></span>
+                        <% if (product.oldPrice && product.oldPrice> 0) { %>
+                          <span class="original-price">₫<%= product.oldPrice.toLocaleString('vi-VN') %></span>
+                          <% } %>
+                      </div>
+                    </div>
+                    <!-- Bỏ nút Thêm (add-to-cart) -->
+                  </div>
+                  <% }); %>
+                    <% } else { %>
+                      <p>Chưa có sản phẩm nào trong danh mục này.</p>
+                      <% } %>
+            </div>
+          </section>
+
+          <!-- XE ĐẠP ĐUA -->
+          <section class="category-section">
+            <div class="section-header">
+              <h2>XE ĐẠP ĐUA</h2>
+              <a href="/products?category=đua" class="view-all">Xem tất cả</a>
+            </div>
+            <div class="product-grid">
+              <% if (productsByCategory && productsByCategory['đua'] && productsByCategory['đua'].length> 0) { %>
+                <% productsByCategory['đua'].forEach(product=> { %>
+                  <div class="product-card" data-id="<%= product._id %>">
+                    <img src="<%= product.mainImage %>" alt="<%= product.name %>">
+                    <h3>
+                      <%= product.name %>
+                    </h3>
+                    <p class="brand">
+                      <%= product.brand %>
+                    </p>
+                    <div class="price-wrapper">
+                      <div class="price">
+                        <span class="current-price">₫<%= (product.price || 0).toLocaleString('vi-VN') %></span>
+                        <% if (product.oldPrice && product.oldPrice> 0) { %>
+                          <span class="original-price">₫<%= product.oldPrice.toLocaleString('vi-VN') %></span>
+                          <% } %>
+                      </div>
+                    </div>
+                    <!-- Bỏ nút Thêm (add-to-cart) -->
+                  </div>
+                  <% }); %>
+                    <% } else { %>
+                      <p>Chưa có sản phẩm nào trong danh mục này.</p>
+                      <% } %>
+            </div>
+          </section>
+
+          <!-- FOOTER -->
+          <footer>
+            <div class="footer-container">
+              <!-- Cột 1 -->
+              <div class="footer-col">
+                <h4>THÔNG TIN</h4>
+                <ul>
+                  <li><a href="#">Giới thiệu</a></li>
+                  <li><a href="#">Danh sách đại lý</a></li>
+                  <li><a href="#">Địa điểm sửa chữa</a></li>
+                  <li><a href="#">Chính sách bảo hành</a></li>
+                  <li><a href="#">Chính sách thanh toán</a></li>
+                  <li><a href="#">Chính sách vận chuyển và giao nhận</a></li>
+                  <li><a href="#">Chính sách đổi trả và hoàn tiền</a></li>
+                  <li><a href="#">Chính sách bảo mật thông tin</a></li>
+                  <li><a href="#">Hoạt động cộng đồng</a></li>
+                </ul>
+              </div>
+
+              <!-- Cột 2 -->
+              <div class="footer-col">
+                <h4>SẢN PHẨM</h4>
+                <ul>
+                  <li><a href="#">Xe Đạp Thể Thao</a></li>
+                  <li><a href="#">Xe Đạp Phổ Thông</a></li>
+                  <li><a href="#">Xe Đạp Trẻ Em</a></li>
+                  <li><a href="#">Phụ Kiện</a></li>
+                  <li><a href="#">Cannondale</a></li>
+                </ul>
+
+                <h4>TIN TỨC</h4>
+                <ul>
+                  <li><a href="#">Quan hệ cổ đông</a></li>
+                  <li><a href="#">Tin tức công ty</a></li>
+                  <li><a href="#">Tin tức xe đạp</a></li>
+                  <li><a href="#">Tuyển dụng</a></li>
+                </ul>
+              </div>
+
+              <!-- Cột 3 -->
+              <div class="footer-col">
+                <h4>LIÊN HỆ</h4>
+                <p><b>NHÀ MÁY SẢN XUẤT:</b><br>Lô A2CN3, Cụm công nghiệp Tây Sơn Hiên, Phường An Hòa, TP.Cần Thơ</p>
+                <p><b>CHI NHÁNH MIỀN NAM:</b><br>19/12C, Đường A!0, Khu công nghiệp Tân Hiệp, Quận Tân Bình, TP.HCM</p>
+                <p>Email: <a href="mailto:brbike@gmail.com.vn">brbike@gmail.com.vn</a></p>
+              </div>
+
+              <!-- Cột 4 -->
+              <div class="footer-col">
+                <h4>CÔNG TY CỔ PHẦN BERU BIKE CẦN THƠ</h4>
+                <p>GPKD Số 0130150828 - cấp ngày 28/08/2022</p>
+                <p>Số 10B Lý Tự Trọng, Ninh Kiều, Cần Thơ</p>
+                <h2>038 960 3429</h2>
+                <div class="social">
+                  <a href=""><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+                  <a href=""><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube"></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="footer-bottom">
+              <p>© <span id="year"></span> Xe Đạp Beru Bike</p>
+            </div>
+          </footer>
+
+          <!-- Scripts -->
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              const menuToggle = document.querySelector('.mobile-menu-toggle');
+              const mobileNav = document.querySelector('.mobile-nav');
+
+              if (menuToggle && mobileNav) {
+                menuToggle.addEventListener('click', function () {
+                  mobileNav.classList.toggle('active');
+                  menuToggle.classList.toggle('active');
+                });
+
+                // Close mobile menu when clicking on a link
+                const mobileLinks = mobileNav.querySelectorAll('a');
+                mobileLinks.forEach(link => {
+                  link.addEventListener('click', function () {
+                    mobileNav.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                  });
+                });
+              }
+
+              // Add click handler for product cards (với data-id, không cần add-to-cart nữa)
+              // Áp dụng cho tất cả các ô sản phẩm ở trang index, chuyển hướng đến product-detail với ID sản phẩm
+              document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', function (e) {
+                  // Ngăn chặn bubble nếu click vào link con (nếu có)
+                  if (e.target.tagName === 'A') return;
+
+                  const productId = this.dataset.id;
+                  if (productId) {
+                    window.location.href = `/product-detail/${productId}`;  // ← Sửa: Sử dụng path param thay vì ?id=
+                  } else {
+                    // Fallback nếu không có ID
+                    console.warn('Product ID not found');
+                    window.location.href = '/products';
+                  }
+                });
+              });
+
+              // Các phần script khác giữ nguyên...
+            });
+
+            // ========================== //
+            // 1️⃣ HERO SLIDER (trên cùng)
+            // ========================== //
+            document.addEventListener("DOMContentLoaded", function () {
+              const slides = document.querySelectorAll(".top-slider .slide");
+              const dots = document.querySelectorAll(".dots span");
+              const prevBtn = document.querySelector(".top-slider .arrow.left");
+              const nextBtn = document.querySelector(".top-slider .arrow.right");
+              let index = 0;
+
+              function showSlide(i) {
+                slides.forEach((s, idx) => {
+                  if (idx === i) {
+                    s.style.display = "block";
+                    s.classList.add("active");
+                  } else {
+                    s.style.display = "none";
+                    s.classList.remove("active");
+                  }
+                  dots[idx].classList.toggle("active", idx === i);
+                });
+              }
+
+              function nextSlide() {
+                index = (index + 1) % slides.length;
+                showSlide(index);
+              }
+
+              function prevSlide() {
+                index = (index - 1 + slides.length) % slides.length;
+                showSlide(index);
+              }
+
+              // Auto chuyển ảnh
+              let auto = setInterval(nextSlide, 4000);
+
+              nextBtn.addEventListener("click", () => {
+                nextSlide();
+                clearInterval(auto);
+                auto = setInterval(nextSlide, 4000);
+              });
+
+              prevBtn.addEventListener("click", () => {
+                prevSlide();
+                clearInterval(auto);
+                auto = setInterval(nextSlide, 4000);
+              });
+
+              dots.forEach((dot, i) => {
+                dot.addEventListener("click", () => {
+                  index = i;
+                  showSlide(index);
+                  clearInterval(auto);
+                  auto = setInterval(nextSlide, 4000);
+                });
+              });
+
+              showSlide(index);
+            });
+
+            // ================================== //
+            // 2️⃣ SLIDER SẢN PHẨM (phần bên dưới)
+            // ================================== //
+            function initProductSliders() {
+              const sliders = document.querySelectorAll(".product-slider");
+              sliders.forEach(slider => {
+                const track = slider.querySelector(".slide-track");
+                const next = slider.querySelector(".next");
+                const prev = slider.querySelector(".prev");
+
+                if (track && next && prev) {
+                  next.addEventListener("click", () => {
+                    track.scrollBy({ left: 250, behavior: "smooth" });
+                  });
+                  prev.addEventListener("click", () => {
+                    track.scrollBy({ left: -250, behavior: "smooth" });
+                  });
+
+                  // Tự động trượt
+                  setInterval(() => {
+                    if (track.scrollLeft + track.clientWidth >= track.scrollWidth) {
+                      track.scrollTo({ left: 0, behavior: "smooth" });
+                    } else {
+                      track.scrollBy({ left: 250, behavior: "smooth" });
+                    }
+                  }, 3500);
+                }
+              });
+            }
+            document.addEventListener("DOMContentLoaded", initProductSliders);
+
+            // ================================= //
+            //  Nút "Xem tất cả" → product.html
+            // ================================= //
+            document.addEventListener("DOMContentLoaded", function () {
+              document.querySelectorAll(".view-all").forEach(btn => {
+                btn.addEventListener("click", e => {
+                  e.preventDefault();
+                  window.location.href = "/products";
+                });
+              });
+            });
+
+            // ======================= //
+            //  Footer hiển thị năm
+            // ======================= //
+            document.addEventListener("DOMContentLoaded", () => {
+              const yearElement = document.getElementById("year");
+              if (yearElement) {
+                yearElement.textContent = new Date().getFullYear();
+              }
+            });
+          </script>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title || 'Đăng ký tài khoản' %>
+    </title>
+    <link rel="stylesheet" href="/style/signup.css">
+    <link rel="icon" type="image/x-icon" href="/image/logo/favicon.png">
+
+</head>
+
+<body>
+    <header>
+        <div class="breadcrumb">
+            <a href="/">Trang chủ</a> | <a href="/auth/login" class="active">Đăng nhập tài khoản</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Flash messages: Ẩn mặc định, chỉ hiển thị khi có error/success từ controller -->
+        <% if (messages && messages.success) { %>
+            <div class="alert alert-success" role="alert">
+                <%= messages.success %>
+            </div>
+            <% } %>
+                <% if (messages && messages.error) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= messages.error %>
+                    </div>
+                    <% } %>
+
+                        <h2>TẠO TÀI KHOẢN</h2>
+
+                        <form id="signup-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="first-name">Họ <span class="required">*</span></label>
+                                    <input type="text" id="first-name" name="firstName" placeholder="Họ của bạn"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="last-name">Tên <span class="required">*</span></label>
+                                    <input type="text" id="last-name" name="lastName" placeholder="Tên của bạn"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email <span class="required">*</span></label>
+                                    <input type="email" id="email" name="email" placeholder="Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Số điện thoại <span class="required">*</span></label>
+                                    <!-- Mới thêm phone -->
+                                    <input type="tel" id="phone" name="phone" placeholder="0123456789"
+                                        pattern="[0-9]{10}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="password">Mật khẩu <span class="required">*</span></label>
+                                    <input type="password" id="password" name="password" placeholder="Mật khẩu"
+                                        minlength="8" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirm-password">Xác nhận mật khẩu <span
+                                            class="required">*</span></label>
+                                    <input type="password" id="confirm-password" name="confirmPassword"
+                                        placeholder="Xác nhận mật khẩu" required>
+                                </div>
+                            </div>
+
+                            <p class="note">Các trường <span class="required">*</span> là bắt buộc. Mật khẩu phải có ít
+                                nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.</p>
+
+                            <div class="button-group">
+                                <a href="/auth/login"><button type="button" class="btn btn-back">Quay lại đăng
+                                        nhập</button></a>
+                                <button type="submit" class="btn btn-submit">Đăng Ký</button>
+                            </div>
+                        </form>
+    </div>
+
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const firstName = document.getElementById("first-name").value.trim();
+            const lastName = document.getElementById("last-name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();  // Thêm phone
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+
+            // Debug log: Mở F12 > Console để xem giá trị khi submit
+            console.log("Form values:", { firstName, lastName, email, phone, passwordLength: password.length, confirmPasswordLength: confirmPassword.length });
+
+            // Frontend validation
+            if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
+                console.error("Validation fail: Missing fields", { firstName, lastName, email, phone, hasPassword: !!password, hasConfirm: !!confirmPassword });
+                alert("Vui lòng điền đầy đủ thông tin! (Check Console F12)");
+                return;
+            }
+            if (password.length < 8) {
+                alert("Mật khẩu phải ít nhất 8 ký tự!");
+                return;
+            }
+            // Regex check: Upper, Lower, Number, Special
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                alert("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa/thường, số và ký tự đặc biệt (@$!%*?&). Ví dụ: Abc123@T");
+                return;
+            }
+            // Validate phone (10 chữ số VN)
+            if (!/^\d{10}$/.test(phone)) {
+                alert("Số điện thoại phải là 10 chữ số!");
+                return;
+            }
+            if (password !== confirmPassword) {
+                alert("Mật khẩu không khớp! Vui lòng nhập lại.");
+                return;
+            }
+
+            try {
+                const response = await fetch("/auth/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ firstName, lastName, email, phone, password, confirmPassword })
+                });
+
+                console.log("Fetch response status:", response.status);
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message || "Đăng ký thành công! Vui lòng đăng nhập.");
+                    window.location.href = "/auth/login";
+                } else {
+                    alert(data.message || "Đã xảy ra lỗi!");
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                alert("Lỗi kết nối đến server: " + error.message + " (Check Console F12)");
+            }
+        });
+    </script>
+</body>
+
+</html>

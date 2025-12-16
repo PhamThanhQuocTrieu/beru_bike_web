@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      .admin-avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e7ff;
+    }
+</style> 
+</head>
+<body>
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <span>Admin Beru Bike</span>
+      </div>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="/admin">Dashboard</a></li>
+          <li><a href="/admin/products">Sản phẩm</a></li>
+          <li><a href="/admin/users" class="active">Người dùng</a></li>
+          <li><a href="/admin/orders">Đơn hàng</a></li>
+          <!-- <li><a href="/admin/reports">Báo cáo</a></li> -->
+        </ul>
+      </nav>
+      <div class="user-profile">
+        <% if (user.avatar && user.avatar.trim() !=='' ) { %>
+          <img src="<%= user.avatar %>" alt="Admin Avatar" class="admin-avatar-img">
+          <% } else { %>
+            <div class="avatar-circle">
+              <%= user.firstName.charAt(0).toUpperCase() %>
+            </div>
+            <% } %>
+
+              <div class="user-info-text">
+                <span class="u-name">
+                  <%= user.firstName %>
+                    <%= user.lastName %>
+                </span>
+                <span class="u-role">Administrator</span>
+              </div>
+              <a href="/auth/logout" class="logout-btn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="/admin/products"><i class="fas fa-box"></i> Sản phẩm</a></li>
+      <li><a href="/admin/orders"><i class="fas fa-shopping-cart"></i> Đơn hàng</a></li>
+      <li><a href="/admin/users"class="active"><i class="fas fa-users"></i> Khách hàng</a></li>
+      <!-- <li><a href="/admin/reports"><i class="fas fa-chart-line"></i> Báo cáo</a></li> -->
+      <li style="margin-top: auto;"><a href="/admin/settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h1 class="page-title">Quản lý người dùng</h1>
+          <a href="/admin/users/add" class="btn btn-primary" style="background: #28a745; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+              <i class="fas fa-plus"></i> Thêm User
+          </a>
+      </div>
+
+      <div class="table-container" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto;">
+        <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: #f8f9fa; border-bottom: 1px solid #eee;">
+              <th style="padding: 15px; text-align: left;">Avatar</th>
+              <th style="padding: 15px; text-align: left;">Họ tên</th>
+              <th style="padding: 15px; text-align: left;">Email / SĐT</th>
+              <th style="padding: 15px; text-align: left;">Vai trò</th>
+              <th style="padding: 15px; text-align: left;">Ngày tạo</th>
+              <th style="padding: 15px; text-align: left;">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (users && users.length > 0) { %>
+                <% users.forEach(u => { %>
+                  <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 15px;">
+                        <img src="<%= u.avatar || '/image/icon/user.png' %>" alt="avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;">
+                    </td>
+                    <td style="padding: 15px;">
+                        <strong><%= u.firstName %> <%= u.lastName %></strong>
+                    </td>
+                    <td style="padding: 15px;">
+                        <div><%= u.email %></div>
+                        <small style="color: #666;"><%= u.phone %></small>
+                    </td>
+                    <td style="padding: 15px;">
+                        <% if(u.role === 'admin') { %>
+                            <span style="background: #cce5ff; color: #004085; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">ADMIN</span>
+                        <% } else { %>
+                            <span style="background: #e2e3e5; color: #383d41; padding: 4px 8px; border-radius: 4px; font-size: 12px;">USER</span>
+                        <% } %>
+                    </td>
+                    <td style="padding: 15px;"><%= new Date(u.createdAt).toLocaleDateString('vi-VN') %></td>
+                    <td style="padding: 15px;">
+                        <a href="/admin/users/edit/<%= u._id %>" style="color: #007bff; margin-right: 10px; font-size: 18px;"><i class="fas fa-edit"></i></a>
+                        
+                        <a href="/admin/users/delete/<%= u._id %>" style="color: #dc3545; font-size: 18px;" onclick="return confirm('Bạn có chắc chắn muốn xóa user này? Hành động này không thể hoàn tác!');">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                  </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px;">Không có người dùng nào.</td>
+                </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Admin Panel. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.querySelector('.sidebar');
+      // Logic toggle sidebar mobile nếu cần
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= title %>
+  </title>
+  <link rel="stylesheet" href="/style/admin.css">
+  <link rel="stylesheet" href="/style/admin-orders.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    .admin-avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e7ff;
+    }
+
+    /* Style cho nút hủy của Admin */
+    .btn-admin-cancel {
+      background: #dc3545;
+    }
+
+    .btn-admin-cancel:hover {
+      background: #c82333;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-container">
+      <div class="logo"><span>Admin Beru Bike</span></div>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="/admin">Dashboard</a></li>
+          <li><a href="/admin/products">Sản phẩm</a></li>
+          <li><a href="/admin/users">Người dùng</a></li>
+          <li><a href="/admin/orders" class="active">Đơn hàng</a></li>
+          <!-- <li><a href="/admin/reports">Báo cáo</a></li> -->
+        </ul>
+      </nav>
+      <div class="user-profile">
+        <% if (user.avatar && user.avatar.trim() !=='' ) { %>
+          <img src="<%= user.avatar %>" alt="Admin Avatar" class="admin-avatar-img">
+          <% } else { %>
+            <div class="avatar-circle">
+              <%= user.firstName.charAt(0).toUpperCase() %>
+            </div>
+            <% } %>
+
+              <div class="user-info-text">
+                <span class="u-name">
+                  <%= user.firstName %>
+                    <%= user.lastName %>
+                </span>
+                <span class="u-role">Administrator</span>
+              </div>
+              <a href="/auth/logout" class="logout-btn" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="/admin/products"><i class="fas fa-box"></i> Sản phẩm</a></li>
+      <li><a href="/admin/orders" class="active"><i class="fas fa-shopping-cart"></i> Đơn hàng</a></li>
+      <li><a href="/admin/users"><i class="fas fa-users"></i> Khách hàng</a></li>
+      <!-- <li><a href="/admin/reports"><i class="fas fa-chart-line"></i> Báo cáo</a></li> -->
+      <li style="margin-top: auto;"><a href="/admin/settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <div class="container">
+      <h1 class="page-title">Quản lý đơn hàng</h1>
+
+      <% if (!orders || orders.length===0) { %>
+        <div style="text-align:center; padding: 50px; color: #666;">
+          <i class="fas fa-box-open" style="font-size: 40px; margin-bottom: 10px;"></i>
+          <p>Chưa có đơn hàng nào trong hệ thống.</p>
+        </div>
+        <% } else { %>
+          <div style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Khách hàng</th>
+                  <th>Sản phẩm</th>
+                  <th>Tổng tiền / TT</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orders.forEach(order=> { %>
+                  <tr>
+                    <td>
+                      <strong>#<%= order._id.toString().slice(-6).toUpperCase() %></strong>
+                      <div style="font-size: 11px; color: #888; margin-top: 4px;">
+                        <%= new Date(order.createdAt).toLocaleDateString('vi-VN') %><br>
+                          <%= new Date(order.createdAt).toLocaleTimeString('vi-VN', {hour: '2-digit' ,
+                            minute:'2-digit'}) %>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="customer-info">
+                        <strong>
+                          <%= order.shippingAddress.fullName %>
+                        </strong>
+                        <small>
+                          <%= order.shippingAddress.phone %>
+                        </small>
+                        <div class="customer-address">
+                          <%= order.shippingAddress.address %>, <%= order.shippingAddress.ward %>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td>
+                      <% if(order.items && order.items.length> 0) { %>
+                        <span style="font-size: 13px;">
+                          <%= order.items[0].name %>
+                        </span>
+                        <% if(order.items.length> 1) { %>
+                          <small style="color: #666;">(+<%= order.items.length - 1 %> món khác)</small>
+                          <% } %>
+                            <% } %>
+                    </td>
+
+                    <td>
+                      <div class="price-text">
+                        <%= order.totalPrice.toLocaleString('vi-VN') %> đ
+                      </div>
+                      <div style="margin-top: 5px;">
+                        <span class="method-text">
+                          <%= order.paymentMethod %>
+                        </span>
+                        <br>
+                        <% let payClass='pay-pending' ; if(order.paymentStatus==='paid' ) payClass='pay-paid' ;
+                          if(order.paymentStatus==='failed' ) payClass='pay-failed' ; %>
+                          <span class="pay-badge <%= payClass %>">
+                            <%= order.paymentStatus==='paid' ? 'Đã thanh toán' : 'Chưa thanh toán' %>
+                          </span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <% let statusLabel='' ; let statusClass='status-' + order.status; switch(order.status) {
+                        case 'pending' : statusLabel='Chờ xử lý' ; break; case 'confirmed' : statusLabel='Đã xác nhận' ;
+                        break; case 'preparing' : statusLabel='Chuẩn bị hàng' ; break; case 'shipping' :
+                        statusLabel='Đang giao' ; break; case 'delivered' : statusLabel='Đã giao hàng' ; break;
+                        case 'completed' : statusLabel='Hoàn thành' ; break; case 'cancelled' : statusLabel='Đã hủy' ;
+                        break; case 'request_cancel' : statusLabel='Yêu cầu hủy' ; break; default:
+                        statusLabel=order.status; } %>
+                        <span class="badge <%= statusClass %>">
+                          <%= statusLabel %>
+                        </span>
+                    </td>
+
+                    <td>
+                      <div class="action-group">
+
+                        <% if (order.status==='request_cancel' ) { %>
+                          <form action="/admin/orders/handle-cancel" method="POST"
+                            onsubmit="return confirm('Duyệt hủy đơn này?');">
+                            <input type="hidden" name="orderId" value="<%= order._id %>">
+                            <input type="hidden" name="action" value="approve">
+                            <button type="submit" class="btn-icon btn-approve" title="Duyệt hủy"><i
+                                class="fas fa-check"></i> Duyệt</button>
+                          </form>
+                          <form action="/admin/orders/handle-cancel" method="POST">
+                            <input type="hidden" name="orderId" value="<%= order._id %>">
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit" class="btn-icon btn-reject" title="Từ chối hủy"><i
+                                class="fas fa-times"></i></button>
+                          </form>
+
+                          <% } else if (order.status==='pending' || order.status==='confirmed' ) { %>
+                            <div style="display: flex; gap: 5px;">
+                              <form action="/admin/orders/update-status" method="POST">
+                                <input type="hidden" name="orderId" value="<%= order._id %>">
+                                <input type="hidden" name="status" value="shipping">
+                                <button class="btn-icon btn-ship" title="Xác nhận giao hàng">
+                                  <i class="fas fa-truck"></i>
+                                </button>
+                              </form>
+
+                              <form action="/admin/orders/admin-cancel" method="POST"
+                                onsubmit="return confirm('Bạn có chắc muốn HỦY đơn hàng này không? Hành động này không thể hoàn tác.');">
+                                <input type="hidden" name="orderId" value="<%= order._id %>">
+                                <button class="btn-icon btn-admin-cancel" title="Hủy đơn hàng">
+                                  <i class="fas fa-trash-alt"></i>
+                                </button>
+                              </form>
+                            </div>
+
+                            <% } else if (order.status==='shipping' ) { %>
+                              <form action="/admin/orders/update-status" method="POST">
+                                <input type="hidden" name="orderId" value="<%= order._id %>">
+                                <input type="hidden" name="status" value="delivered">
+                                <button class="btn-icon btn-deliver" title="Xác nhận đã giao hàng">
+                                  <i class="fas fa-hand-holding-usd"></i>
+                                </button>
+                              </form>
+
+                              <% } else if (order.status==='delivered' ) { %>
+                                <form action="/admin/orders/update-status" method="POST">
+                                  <input type="hidden" name="orderId" value="<%= order._id %>">
+                                  <input type="hidden" name="status" value="completed">
+                                  <button class="btn-icon btn-complete" title="Hoàn tất đơn hàng">
+                                    <i class="fas fa-check-circle"></i>
+                                  </button>
+                                </form>
+                                <% } %>
+
+                      </div>
+                    </td>
+                  </tr>
+                  <% }) %>
+              </tbody>
+            </table>
+          </div>
+          <% } %>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Admin Panel.</p>
+    </div>
+  </footer>
+</body>
+
+</html>

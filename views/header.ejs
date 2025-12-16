@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <link rel="stylesheet" href="/style/header.css">
+</head>
+<body>
+    <header>
+  <div class="container topbar">
+    <a href="/" class="brand">
+      <img src="/image/logo/logo.png" alt="Beru Bike Logo" class="logo-image">
+      <div>
+        </div>
+    </a>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/">Trang chủ</a>
+      <a href="/products">Sản phẩm</a>
+      <!-- <a href="#">Thương hiệu</a> -->
+      <a href="#">Khuyến mãi</a>
+      <a href="#">Liên hệ</a>
+    </nav>
+
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="search" role="search" style="position: relative;">
+        <input id="searchInput" placeholder="Tìm xe đạp, thương hiệu..." />
+        <div class="icon"><img src="/image/icon/search.png" alt=""></div>
+      </div>
+
+      <div class="cart" id="cartBtn" aria-label="Giỏ hàng" onclick="window.location.href='/checkout'">
+        <img src="/image/icon/cart.png" alt="">
+        <span class="badge" id="cartCount"><%= (typeof totalCartItems !== 'undefined') ? totalCartItems : 0 %></span>
+      </div>
+
+      <div class="user-section">
+        <% if (typeof user !== 'undefined' && user) { %>
+          <div class="user-dropdown">
+            <a href="#" class="user-avatar" id="user-toggle-desktop">
+              <div class="avatar-circle">
+                <% if (typeof user.avatar !== 'undefined' && user.avatar) { %>
+                  <img src="<%= user.avatar %>" alt="Avatar cá nhân" />
+                <% } else { %>
+                  <img src="/image/icon/user.png" alt="User Icon" class="user-icon" />
+                <% } %>
+              </div>
+              <span class="dropdown-arrow"></span>
+            </a>
+
+            <ul class="dropdown-menu">
+              <li><a href="/profile">Thông tin của tôi</a></li>
+              
+              <li><a href="/checkout/orders/list">Đơn mua</a></li> 
+              
+              <li><a href="/auth/logout">Đăng xuất</a></li>
+            </ul>
+          </div>
+        <% } else { %>
+          <div class="auth-links">
+            <a href="/auth/login" class="login">Đăng nhập</a>
+            <span>|</span>
+            <a href="/auth/signup" class="register">Đăng ký</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <button class="mobile-menu-toggle" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <nav class="mobile-nav">
+    <a href="/">Trang chủ</a>
+    <a href="/products">Sản phẩm</a>
+    <a href="#">Thương hiệu</a>
+    <a href="#">Khuyến mãi</a>
+    <a href="#">Liên hệ</a>
+    
+    <div class="mobile-auth">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <div class="mobile-user-dropdown">
+          <a href="#" class="mobile-user-avatar" id="mobile-user-toggle">
+            <div class="avatar-circle">
+              <% if (typeof user.avatar !== 'undefined' && user.avatar) { %>
+                <img src="<%= user.avatar %>" alt="Avatar cá nhân" />
+              <% } else { %>
+                <img src="/image/icon/user.png" alt="User Icon" class="user-icon" />
+              <% } %>
+            </div>
+            <span>Hi, <%= user.firstName %></span>
+          </a>
+          <ul class="mobile-dropdown-menu">
+            <li><a href="/profile">Thông tin của tôi</a></li>
+            
+            <li><a href="/checkout/orders/list">Đơn mua</a></li>
+            
+            <li><a href="/auth/logout">Đăng xuất</a></li>
+          </ul>
+        </div>
+      <% } else { %>
+        <a href="/auth/login" class="login">Đăng nhập</a>
+        <a href="/auth/signup" class="register">Đăng ký</a>
+      <% } %>
+    </div>
+  </nav>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 1. Search Logic
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const keyword = searchInput.value.trim();
+          if (keyword) {
+            window.location.href = `/search?keyword=${encodeURIComponent(keyword)}`;
+          }
+        }
+      });
+  }
+
+  // 2. Mobile Menu Toggle Logic
+  const menuToggle = document.querySelector('.mobile-menu-toggle');
+  const mobileNav = document.querySelector('.mobile-nav');
+  
+  if (menuToggle && mobileNav) {
+      menuToggle.addEventListener('click', function() {
+          this.classList.toggle('active'); // Thêm class để biến hình icon hamburger thành X
+          mobileNav.classList.toggle('active'); // Hiện menu
+      });
+  }
+});
+</script>
+
+</body>
+</html>

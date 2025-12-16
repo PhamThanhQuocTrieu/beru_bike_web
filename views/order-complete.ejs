@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoàn tất đơn hàng - Beru Bike</title>
+  <link rel="stylesheet" href="/style/payment.css">
+  <link rel="stylesheet" href="/style/footer.css">
+  <link rel="stylesheet" href="/style/header.css">
+  <link rel="stylesheet" href="/style/order-complete.css">
+  <link rel="icon" type="image/x-icon" href="/image/logo/favicon.png">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <%- include('header') %>
+
+    <div class="container">
+      <div class="checkout-progress">
+        <div class="progress-step completed">
+          <div class="step-circle"><i class="fas fa-check"></i></div>
+          <span>Giỏ hàng</span>
+        </div>
+        <div class="progress-line active"></div>
+        <div class="progress-step completed">
+          <div class="step-circle"><i class="fas fa-check"></i></div>
+          <span>Thanh toán</span>
+        </div>
+        <div class="progress-line active"></div>
+        <div class="progress-step active">
+          <div class="step-circle">3</div>
+          <span>Hoàn tất</span>
+        </div>
+      </div>
+
+      <div class="checkout">
+        <div class="checkout-left">
+          <div class="box success-box" style="text-align: center; padding: 40px;">
+            <div class="success-icon">
+              <i class="fas fa-check-circle" style="font-size: 80px; color: #28a745; margin-bottom: 20px;"></i>
+            </div>
+            <h2 class="success-title">Đặt hàng thành công!</h2>
+            <p class="success-message">Cảm ơn bạn đã mua sắm tại Beru Bike. Đơn hàng của bạn đã được xác nhận.</p>
+
+            <div class="order-details" style="margin: 30px 0; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+              <h3>Mã đơn hàng: <strong style="color: #28a745;">
+                  <%= orderId || 'N/A' %>
+                </strong></h3>
+              <p>Chúng tôi sẽ liên hệ với bạn qua SĐT <strong>
+                  <%= shippingAddress.phone || 'đã cung cấp' %>
+                </strong> để xác nhận giao hàng trong vòng 24h.</p>
+
+              <% if (user) { %>
+                <p style="margin-top: 15px;">
+                  <i class="fas fa-file-invoice"></i>
+                  <a href="/checkout/orders/list" style="color: #007bff; text-decoration: none; font-weight: 600;">Xem
+                    lịch sử đơn hàng</a>
+                </p>
+              <% } %>
+              </div>
+
+            <div class="success-actions" style="display: flex; gap: 15px; justify-content: center;">
+              <a href="/" class="btn-buy" style="text-decoration: none; padding: 12px 25px;">Quay về trang chủ</a>
+              <a href="/products" class="btn-back" style="text-decoration: none; padding: 12px 25px;">Tiếp tục mua
+                sắm</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-right">
+          <div class="box order-summary sticky-box">
+            <h3><i class="fas fa-receipt"></i> Tóm tắt đơn hàng</h3>
+            <div class="summary">
+              <div class="summary-row">
+                <span>Sản phẩm:</span>
+                <span>
+                  <%= orderItems.length %> món
+                </span>
+              </div>
+              <div class="summary-row">
+                <span>Tạm tính:</span>
+                <span>₫<%= totalPrice.toLocaleString('vi-VN') %></span>
+              </div>
+              <div class="summary-row">
+                <span>Phí vận chuyển:</span>
+                <span style="color: green;">Miễn phí</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-row total-row">
+                <span>Tổng cộng:</span>
+                <span class="total-amount">₫<%= totalPrice.toLocaleString('vi-VN') %></span>
+              </div>
+            </div>
+            <div class="trust-badges">
+              <div class="badge"><i class="fas fa-shipping-fast"></i> Giao hàng nhanh</div>
+              <div class="badge"><i class="fas fa-headset"></i> Hỗ trợ 24/7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-bottom">
+        <p>© 2025 Xe Đạp Beru Bike - Chất lượng & Uy tín</p>
+      </div>
+    </footer>
+</body>
+
+</html>

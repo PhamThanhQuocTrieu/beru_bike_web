@@ -1,0 +1,434 @@
+/* =========================================
+   1. RESET & BASE STYLES (GIỮ NGUYÊN)
+   ========================================= */
+:root {
+  --primary-color: #4f46e5;   /* Indigo */
+  --secondary-color: #6b7280; /* Gray */
+  --success-color: #10b981;   /* Green */
+  --danger-color: #ef4444;    /* Red */
+  --warning-color: #f59e0b;   /* Yellow */
+  --bg-body: #f3f4f6;
+  --bg-card: #ffffff;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+/* =========================================
+   2. HEADER & SIDEBAR (GIỮ NGUYÊN)
+   ========================================= */
+/* Header */
+.header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 30px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.header-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-nav ul {
+  display: flex;
+  gap: 20px;
+}
+
+.header-nav a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.header-nav a:hover, .header-nav a.active {
+  color: var(--primary-color);
+  background: #e0e7ff;
+}
+
+/* User Profile */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar-circle {
+  width: 36px; height: 36px;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600;
+}
+
+.user-info-text {
+  display: flex; flex-direction: column;
+  line-height: 1.2;
+  margin-right: 15px;
+}
+
+.u-name { font-size: 14px; font-weight: 600; }
+.u-role { font-size: 11px; color: var(--text-muted); }
+
+.logout {
+  color: var(--danger-color);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 70px;
+  width: 250px;
+  height: calc(100vh - 70px);
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  padding: 20px;
+  overflow-y: auto;
+  transition: transform 0.3s;
+  z-index: 99;
+}
+
+.sidebar-menu li { margin-bottom: 8px; }
+
+.sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: var(--text-muted);
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.sidebar-menu li a:hover, .sidebar-menu li a.active {
+  background: #eff6ff;
+  color: var(--primary-color);
+}
+
+.sidebar-menu li a i { width: 20px; text-align: center; }
+
+/* =========================================
+   3. MAIN CONTENT & LAYOUT (GIỮ NGUYÊN)
+   ========================================= */
+.main-content {
+  margin-left: 250px;
+  padding: 30px;
+  min-height: calc(100vh - 70px);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: var(--text-main);
+}
+
+.page-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+/* =========================================
+   4. DASHBOARD & STATS CARDS (GIỮ NGUYÊN)
+   ========================================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.stat-card:hover { transform: translateY(-3px); }
+
+.stat-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+.stat-title { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+/* Icon Colors */
+.icon-products { background: #e0e7ff; color: var(--primary-color); }
+.icon-users { background: #dcfce7; color: var(--success-color); }
+.icon-revenue { background: #fef3c7; color: var(--warning-color); }
+.icon-orders { background: #fee2e2; color: var(--danger-color); }
+
+.stat-value { font-size: 28px; font-weight: 700; color: var(--text-main); line-height: 1.2; }
+.stat-trend { margin-top: 10px; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+.trend-up { color: var(--success-color); font-weight: 600; }
+.trend-neutral { color: var(--text-muted); }
+
+/* Quick Actions Grid */
+.content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+.card-box { background: var(--bg-card); border-radius: 12px; padding: 24px; border: 1px solid var(--border-color); }
+.card-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+.action-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+.action-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); background: #f9fafb;
+  text-decoration: none; color: var(--text-main); transition: all 0.2s;
+}
+.action-btn:hover { background: #fff; border-color: var(--primary-color); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+.action-btn i { font-size: 24px; margin-bottom: 10px; color: var(--text-muted); }
+.action-btn:hover i { color: var(--primary-color); }
+.action-btn span { font-size: 14px; font-weight: 500; }
+
+/* =========================================
+   5. TABLES & LISTS (GIỮ NGUYÊN)
+   ========================================= */
+.table-container, .table-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.admin-table, .products-table, .users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #f9fafb;
+  padding: 12px 20px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-color);
+}
+
+td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  color: var(--text-main);
+  vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover { background: #f9fafb; }
+
+.product-thumbnail {
+  width: 100px; height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+/* =========================================
+   6. FORMS (ĐÃ CẬP NHẬT GỌN GÀNG)
+   ========================================= */
+.form-container {
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  max-width: 800px;
+  margin: 0 auto; /* Canh giữa form */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); /* Thêm bóng nhẹ cho đẹp */
+}
+
+/* Mẹo: Dùng Grid để chia cột trên màn hình lớn */
+@media (min-width: 768px) {
+  form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Chia 3 cột đều nhau */
+    gap: 20px;
+  }
+  
+  /* Các ô dài sẽ chiếm trọn bề ngang */
+  .form-group:nth-child(1), /* Tên SP */
+  .form-group:nth-child(2), /* Thương hiệu */
+  .form-group:nth-child(3), /* Loại xe */
+  .form-group:nth-child(7), /* Mô tả */
+  .form-group:nth-child(8), /* Ảnh */
+  .form-actions {
+    grid-column: 1 / -1; 
+  }
+  /* Các ô còn lại (Giá, Giá cũ, Tồn kho) sẽ tự động lọt vào 3 cột ở giữa */
+}
+
+.form-group { margin-bottom: 0; /* Khoảng cách do gap của grid lo */ }
+
+/* Mobile thì giãn cách ra một chút */
+@media (max-width: 767px) {
+  .form-group { margin-bottom: 20px; }
+}
+
+.form-group label { 
+  display: block; 
+  font-weight: 600; 
+  margin-bottom: 8px; 
+  font-size: 14px; 
+  color: var(--text-main);
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f9fafb; /* Nền xám nhạt hiện đại */
+  color: var(--text-main);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+/* Hiệu ứng khi bấm vào ô nhập liệu */
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+  outline: none; 
+  background-color: #fff;
+  border-color: var(--primary-color); 
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); 
+}
+
+.form-group input[type="file"] {
+  padding: 8px;
+  background-color: #fff;
+  border: 1px dashed var(--secondary-color); /* Viền nét đứt cho file */
+}
+
+.form-group small {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Khu vực nút bấm */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end; /* Đẩy nút sang phải */
+  padding-top: 20px;
+  margin-top: 10px;
+  border-top: 1px solid #f3f4f6;
+}
+
+/* =========================================
+   7. BUTTONS & BADGES (GIỮ NGUYÊN)
+   ========================================= */
+.btn {
+  display: inline-block; padding: 10px 24px;
+  border-radius: 6px; font-weight: 600; font-size: 14px;
+  border: none; cursor: pointer; transition: all 0.2s;
+}
+.btn-primary { background: var(--primary-color); color: #fff; }
+.btn-primary:hover { background: #4338ca; transform: translateY(-1px); }
+.btn-danger { background: var(--danger-color); color: #fff; }
+.btn-secondary { background: #fff; border: 1px solid var(--border-color); color: var(--text-main); }
+.btn-secondary:hover { background: #f3f4f6; }
+
+/* Action Icons (Edit/Delete) */
+.action-buttons { display: flex; gap: 8px; }
+.btn-icon {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: transparent;
+  color: var(--text-muted); cursor: pointer; transition: 0.2s;
+}
+.btn-icon:hover { background: #f3f4f6; color: var(--primary-color); }
+.btn-icon.delete:hover { color: var(--danger-color); background: #fef2f2; }
+
+/* Badges Status */
+.badge {
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+}
+.badge-warning, .status-pending { background: #fffbeb; color: #b45309; }
+.badge-info, .status-shipping { background: #eff6ff; color: #1d4ed8; }
+.badge-success, .status-completed { background: #ecfdf5; color: #047857; }
+.badge-secondary, .status-cancelled { background: #f3f4f6; color: #4b5563; }
+.badge-danger-outline, .status-request_cancel { 
+  background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;
+  animation: pulse 2s infinite; 
+}
+
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+/* =========================================
+   8. FOOTER (GIỮ NGUYÊN)
+   ========================================= */
+.footer {
+  text-align: center; padding: 20px;
+  color: var(--text-muted); font-size: 13px;
+  margin-top: auto;
+}
+
+/* =========================================
+   9. RESPONSIVE (GIỮ NGUYÊN)
+   ========================================= */
+@media (max-width: 1024px) {
+  .content-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.active { transform: translateX(0); }
+  .main-content { margin-left: 0; padding: 20px; }
+  .header-nav ul { display: none; }
+  .stats-grid { grid-template-columns: 1fr; }
+}
