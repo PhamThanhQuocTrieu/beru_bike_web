@@ -60,7 +60,7 @@ exports.signup = async (req, res) => {
       return res.status(400).json({ message: 'Email hoặc Số điện thoại đã tồn tại!' });
     }
 
-    // Tạo user mới
+    // Tạo user mới (Mặc định isLocked sẽ là false do schema)
     const newUser = new User({ 
         firstName: trimmedFirstName, 
         lastName: trimmedLastName, 
@@ -78,7 +78,7 @@ exports.signup = async (req, res) => {
   }
 };
 
-// POST Login (LOGIC GỘP GIỎ HÀNG QUAN TRỌNG)
+// POST Login (LOGIC GỘP GIỎ HÀNG QUAN TRỌNG + CHECK LOCK)
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body || {}; 
@@ -96,6 +96,11 @@ exports.login = async (req, res) => {
     const user = await User.findOne(queryField).select('+password');
     if (!user) {
       return res.status(400).json({ message: 'Tài khoản không tồn tại!' }); 
+    }
+
+    // [MỚI] Kiểm tra xem tài khoản có bị khóa không
+    if (user.isLocked) {
+        return res.status(403).json({ message: 'Tài khoản của bạn đã bị khóa do vi phạm chính sách. Vui lòng liên hệ Admin.' });
     }
 
     // Kiểm tra mật khẩu

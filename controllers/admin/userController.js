@@ -48,7 +48,8 @@ exports.postAddUser = async (req, res) => {
       password, // Model sẽ tự hash password này
       role,
       gender,
-      dob
+      dob,
+      isLocked: false // Mặc định không khóa
     });
 
     await newUser.save();
@@ -57,9 +58,9 @@ exports.postAddUser = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.render("admin/addUser", {
-        title: "Thêm người dùng mới",
-        user: req.user,
-        error: "Lỗi hệ thống: " + err.message
+      title: "Thêm người dùng mới",
+      user: req.user,
+      error: "Lỗi hệ thống: " + err.message
     });
   }
 };
@@ -122,10 +123,45 @@ exports.postEditUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
+    // Không cho phép tự xóa chính mình
+    if (req.user._id.toString() === userId) {
+        console.log("Không thể xóa tài khoản đang đăng nhập");
+        return res.redirect("/admin/users");
+    }
     await User.findByIdAndDelete(userId);
     res.redirect("/admin/users");
   } catch (err) {
     console.error(err);
     res.redirect("/admin/users");
   }
+};
+
+// 7. [MỚI] Khóa / Mở khóa tài khoản
+exports.toggleLockUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.redirect("/admin/users");
+        }
+
+        // Không cho phép tự khóa chính mình (Admin đang login)
+        if (userId.toString() === req.user._id.toString()) {
+             console.log("Không thể tự khóa tài khoản admin đang đăng nhập");
+             // Có thể dùng flash message để báo lỗi nếu muốn
+             return res.redirect("/admin/users");
+        }
+
+        // Đảo ngược trạng thái khóa (True -> False, False -> True)
+        user.isLocked = !user.isLocked;
+        await user.save();
+
+        console.log(`Đã thay đổi trạng thái user ${user.email} thành: ${user.isLocked ? 'Locked' : 'Active'}`);
+        res.redirect("/admin/users");
+
+    } catch (err) {
+        console.error(err);
+        res.redirect("/admin/users");
+    }
 };

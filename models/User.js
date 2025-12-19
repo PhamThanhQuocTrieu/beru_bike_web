@@ -8,31 +8,36 @@ const userSchema = new mongoose.Schema({
     type: String, 
     required: true, 
     unique: true,
-    lowercase: true, // Tự động chuyển lowercase để tránh duplicate case-sensitive
+    lowercase: true, // Tự động chuyển lowercase
     trim: true // Loại bỏ khoảng trắng
   },
   phone: { 
     type: String, 
     required: true, 
     unique: true,
-    trim: true // Loại bỏ khoảng trắng
+    trim: true 
   },  
   password: { 
     type: String, 
     required: true, 
     minlength: 6,
-    select: false // Ẩn password mặc định khi query (phải dùng .select('+password'))
+    select: false // Ẩn password mặc định khi query
   },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
-  dob: { type: Date }, // Ngày sinh (ISO format: YYYY-MM-DD)
+  dob: { type: Date }, // Ngày sinh
   gender: { type: String, enum: ['male', 'female', 'other'] }, // Giới tính
   avatar: { type: String, default: '/image/icon/user.png' }, // Ảnh đại diện
-  // ---------------------
+  
+  // [MỚI] Trường trạng thái khóa tài khoản
+  isLocked: { 
+    type: Boolean, 
+    default: false // Mặc định là FALSE (Tài khoản hoạt động bình thường)
+  },
 
   createdAt: { type: Date, default: Date.now }
 });
 
-// Indexes cho unique fields (tăng tốc query và enforce unique)
+// Indexes cho unique fields (tăng tốc query)
 userSchema.index({ email: 1 });
 userSchema.index({ phone: 1 });
 
