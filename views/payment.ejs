@@ -16,6 +16,37 @@
       vertical-align: middle;
       margin-right: 10px;
     }
+
+    /* [MỚI] Style cho 3 ô chọn địa lý */
+    .address-selectors {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+    .address-selectors select {
+        flex: 1; /* Chia đều 3 ô */
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+        background: #fff;
+        font-size: 14px;
+        color: #333;
+    }
+    .address-selectors select:focus {
+        border-color: #ee4d2d;
+    }
+    .address-selectors select:disabled {
+        background-color: #f9f9f9;
+        cursor: not-allowed;
+    }
+
+    /* Mobile: Xếp dọc */
+    @media (max-width: 768px) {
+        .address-selectors {
+            flex-direction: column;
+        }
+    }
   </style>
 </head>
 
@@ -71,7 +102,7 @@
                       <p class="item-price">₫<%= (item.price || 0).toLocaleString('vi-VN') %>
                       </p>
                       <p class="item-subtotal">Tổng: <strong>₫<%= ((item.price || 0) * (item.quantity ||
-                            1)).toLocaleString('vi-VN') %></strong></p>
+                          1)).toLocaleString('vi-VN') %></strong></p>
                     </div>
                   </div>
                   <% }); %>
@@ -92,38 +123,42 @@
                 <div class="form-group">
                   <label for="fullName">Họ và tên <span class="required">*</span></label>
                   <input type="text" id="fullName" name="fullName"
-                    value="<%= user ? (user.fullName || user.username) : '' %>" placeholder="Họ và Tên" required <% if
-                    (user) { %>readonly style="background-color: #f8f9fa; cursor: not-allowed;"<% } %>>
-                    <span class="error-message" id="fullName-error" style="display: none; color: red;"></span>
-                    <span class="form-hint">Nhập tên đầy đủ của bạn</span>
-                    <% if (!user) { %>
-                      <small class="form-note">Bạn có thể đăng nhập để tự động điền thông tin.</small>
-                      <% } %>
+                    value="<%= user ? (user.fullName || user.username) : '' %>" placeholder="Họ và Tên" required>
+                  <span class="error-message" id="fullName-error" style="display: none; color: red;"></span>
                 </div>
                 <div class="form-group">
                   <label for="phone">Số điện thoại <span class="required">*</span></label>
                   <input type="tel" id="phone" name="phone" value="<%= user ? user.phone : '' %>"
-                    placeholder="0123 456 789" required pattern="[0-9]{10,11}" <% if (user) { %>readonly
-                  style="background-color: #f8f9fa; cursor: not-allowed;"<% } %>>
-                    <span class="error-message" id="phone-error" style="display: none; color: red;"></span>
-                    <span class="form-hint">Số điện thoại để liên hệ (10-11 số)</span>
-                    <% if (!user) { %>
-                      <small class="form-note">Bạn có thể đăng nhập để tự động điền thông tin.</small>
-                      <% } %>
+                    placeholder="0123 456 789" required pattern="[0-9]{10,11}">
+                  <span class="error-message" id="phone-error" style="display: none; color: red;"></span>
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group full">
-                  <label for="address">Địa chỉ nhận hàng <span class="required">*</span></label>
-                  <textarea id="address" name="address" placeholder="Số nhà, đường, phường/xã, thành phố..." required
-                    minlength="10" <% if (user) {
-                    %>readonly style="background-color: #f8f9fa; cursor: not-allowed;"<% } %>><%= user ? user.address || '' : '' %></textarea>
+                    <label>Khu vực giao hàng <span class="required">*</span></label>
+                    <div class="address-selectors">
+                        <select id="province" name="province">
+                            <option value="">-- Chọn Tỉnh/Thành --</option>
+                        </select>
+                        <select id="district" name="district" disabled>
+                            <option value="">-- Chọn Quận/Huyện --</option>
+                        </select>
+                        <select id="ward" name="ward" disabled>
+                            <option value="">-- Chọn Phường/Xã --</option>
+                        </select>
+                    </div>
+                    <span class="error-message" id="area-error" style="display: none; color: red;"></span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group full">
+                  <label for="specificAddress">Địa chỉ cụ thể <span class="required">*</span></label>
+                  <textarea id="specificAddress" name="specificAddress" placeholder="Số nhà, tên đường, ấp/khóm..." required
+                    minlength="5"><%= user ? user.address : '' %></textarea>
                   <span class="error-message" id="address-error" style="display: none; color: red;"></span>
-                  <span class="form-hint">Nhập địa chỉ giao hàng đầy đủ</span>
-                  <% if (!user) { %>
-                    <small class="form-note">Bạn có thể đăng nhập để tự động điền thông tin.</small>
-                    <% } %>
+                  <span class="form-hint">Ví dụ: Số 10, Đường 3/2 (Không cần nhập lại Tỉnh/Thành)</span>
                 </div>
               </div>
 
@@ -131,7 +166,6 @@
                 <div class="form-group full">
                   <label for="note">Ghi chú đơn hàng (Tùy chọn)</label>
                   <textarea id="note" name="note" placeholder="Ví dụ: Giao hàng vào sáng, có chuông cửa..."></textarea>
-                  <span class="form-hint">Ghi chú giúp shipper giao hàng tốt hơn</span>
                 </div>
               </div>
             </form>
@@ -220,15 +254,92 @@
       </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    
     <script>
-      // Validation function
+      // ==========================================
+      // 1. XỬ LÝ API ĐỊA LÝ VIỆT NAM (Provinces)
+      // ==========================================
+      const host = "https://provinces.open-api.vn/api/";
+      
+      var callAPI = (api) => {
+          return axios.get(api).then((response) => {
+              renderData(response.data, "province");
+          });
+      }
+      
+      callAPI(host + "?depth=1"); // Load Tỉnh/Thành ngay khi vào trang
+
+      var callApiDistrict = (api) => {
+          return axios.get(api).then((response) => {
+              renderData(response.data.districts, "district");
+          });
+      }
+      
+      var callApiWard = (api) => {
+          return axios.get(api).then((response) => {
+              renderData(response.data.wards, "ward");
+          });
+      }
+
+      var renderData = (array, select) => {
+          let row = ' <option value="">-- Chọn ' + (select === "province" ? "Tỉnh/Thành" : (select === "district" ? "Quận/Huyện" : "Phường/Xã")) + ' --</option>';
+          array.forEach(element => {
+              row += `<option value="${element.code}">${element.name}</option>`
+          });
+          document.querySelector("#" + select).innerHTML = row;
+      }
+
+      // Khi chọn Tỉnh -> Load Huyện
+      document.querySelector("#province").addEventListener("change", () => {
+          let provinceCode = document.querySelector("#province").value;
+          const districtSelect = document.querySelector("#district");
+          const wardSelect = document.querySelector("#ward");
+          
+          districtSelect.innerHTML = '<option value="">-- Đang tải... --</option>';
+          wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+          wardSelect.disabled = true;
+
+          if(provinceCode) {
+              callApiDistrict(host + "p/" + provinceCode + "?depth=2");
+              districtSelect.disabled = false;
+          } else {
+              districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+              districtSelect.disabled = true;
+          }
+      });
+
+      // Khi chọn Huyện -> Load Xã
+      document.querySelector("#district").addEventListener("change", () => {
+          let districtCode = document.querySelector("#district").value;
+          const wardSelect = document.querySelector("#ward");
+          
+          wardSelect.innerHTML = '<option value="">-- Đang tải... --</option>';
+
+          if(districtCode) {
+              callApiWard(host + "d/" + districtCode + "?depth=2");
+              wardSelect.disabled = false;
+          } else {
+              wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+              wardSelect.disabled = true;
+          }
+      });
+
+      // ==========================================
+      // 2. VALIDATE FORM
+      // ==========================================
       function validateForm() {
         let isValid = true;
         const errors = {};
 
         const fullName = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
-        const address = document.getElementById('address').value.trim();
+        const specificAddress = document.getElementById('specificAddress').value.trim();
+        
+        // Lấy giá trị 3 ô chọn
+        const province = document.getElementById('province').value;
+        const district = document.getElementById('district').value;
+        const ward = document.getElementById('ward').value;
 
         const paymentMethodEl = document.querySelector('input[name="payment"]:checked');
         const paymentMethod = paymentMethodEl ? paymentMethodEl.value : '';
@@ -237,32 +348,30 @@
         document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
 
         if (!fullName) {
-          errors.fullName = 'Vui lòng điền họ và tên đầy đủ!';
-          document.getElementById('fullName-error').textContent = errors.fullName;
+          document.getElementById('fullName-error').textContent = 'Vui lòng điền họ và tên đầy đủ!';
           document.getElementById('fullName-error').style.display = 'block';
           isValid = false;
         }
 
         if (!phone) {
-          errors.phone = 'Vui lòng điền số điện thoại!';
-          document.getElementById('phone-error').textContent = errors.phone;
+          document.getElementById('phone-error').textContent = 'Vui lòng điền số điện thoại!';
           document.getElementById('phone-error').style.display = 'block';
           isValid = false;
         } else if (!/^[0-9]{10,11}$/.test(phone)) {
-          errors.phone = 'Số điện thoại phải là 10-11 số!';
-          document.getElementById('phone-error').textContent = errors.phone;
+          document.getElementById('phone-error').textContent = 'Số điện thoại phải là 10-11 số!';
           document.getElementById('phone-error').style.display = 'block';
           isValid = false;
         }
 
-        if (!address) {
-          errors.address = 'Vui lòng điền địa chỉ nhận hàng!';
-          document.getElementById('address-error').textContent = errors.address;
-          document.getElementById('address-error').style.display = 'block';
-          isValid = false;
-        } else if (address.length < 10) {
-          errors.address = 'Địa chỉ phải chi tiết hơn (ít nhất 10 ký tự)!';
-          document.getElementById('address-error').textContent = errors.address;
+        // Kiểm tra đã chọn đủ 3 cấp hành chính chưa
+        if (!province || !district || !ward) {
+            document.getElementById('area-error').textContent = 'Vui lòng chọn đầy đủ Tỉnh, Huyện, Xã!';
+            document.getElementById('area-error').style.display = 'block';
+            isValid = false;
+        }
+
+        if (!specificAddress) {
+          document.getElementById('address-error').textContent = 'Vui lòng điền địa chỉ cụ thể (số nhà, đường)!';
           document.getElementById('address-error').style.display = 'block';
           isValid = false;
         }
@@ -280,28 +389,45 @@
         return isValid;
       }
 
+      // ==========================================
+      // 3. XỬ LÝ ĐẶT HÀNG (PLACE ORDER)
+      // ==========================================
       async function placeOrder() {
         if (!validateForm()) return;
-
-        const fullName = document.getElementById('fullName').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const address = document.getElementById('address').value.trim();
-        const note = document.getElementById('note').value.trim();
-
-        const paymentMethodEl = document.querySelector('input[name="payment"]:checked');
-        const paymentMethod = paymentMethodEl ? paymentMethodEl.value : 'cod';
 
         const btnBuy = document.getElementById('place-order-btn');
         const originalContent = btnBuy.innerHTML;
         btnBuy.innerHTML = '<span>Đang xử lý...</span> <i class="fas fa-spinner fa-spin"></i>';
         btnBuy.disabled = true;
 
+        // Lấy Text hiển thị của 3 ô chọn (Ví dụ: "Hà Nội", "Ba Đình") thay vì lấy mã code
+        const provinceText = document.querySelector("#province option:checked").text;
+        const districtText = document.querySelector("#district option:checked").text;
+        const wardText = document.querySelector("#ward option:checked").text;
+        
+        // Lấy địa chỉ cụ thể
+        const specificAddress = document.getElementById('specificAddress').value.trim();
+
+        // [QUAN TRỌNG] Gộp thành chuỗi địa chỉ đầy đủ để gửi Server
+        const fullAddressString = `${specificAddress}, ${wardText}, ${districtText}, ${provinceText}`;
+
+        // Lấy các thông tin khác
+        const fullName = document.getElementById('fullName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const note = document.getElementById('note').value.trim();
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
         try {
           const response = await fetch('/checkout/orders/order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              customer: { fullName, phone, address, note },
+              customer: { 
+                  fullName, 
+                  phone, 
+                  address: fullAddressString, // Gửi chuỗi địa chỉ đã gộp
+                  note 
+              },
               paymentMethod
             })
           });

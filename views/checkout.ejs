@@ -14,6 +14,31 @@
   <style>
     /* Style riêng cho logo thanh toán */
     .payment-option img { vertical-align: middle; margin-right: 10px; }
+
+    /* [MỚI] Style cho 3 ô chọn địa lý */
+    .address-selectors {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+    .address-selectors select {
+        flex: 1; /* Chia đều 3 ô */
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+        background: #fff;
+        font-size: 14px;
+        color: #333;
+        height: 42px;
+    }
+    .address-selectors select:focus { border-color: #ee4d2d; }
+    .address-selectors select:disabled { background-color: #f9f9f9; cursor: not-allowed; }
+
+    /* Mobile: Xếp dọc */
+    @media (max-width: 768px) {
+        .address-selectors { flex-direction: column; }
+    }
   </style>
 </head>
 
@@ -103,17 +128,39 @@
                 <div class="form-group">
                   <label for="fullName">Họ và tên <span class="required">*</span></label>
                   <input type="text" id="fullName" name="fullName" value="<%= user ? (user.fullName || user.lastName + ' ' + user.firstName) : '' %>" placeholder="Họ và Tên" required>
+                  <span class="error-message" id="fullName-error" style="display: none; color: red;"></span>
                 </div>
                 <div class="form-group">
                   <label for="phone">Số điện thoại <span class="required">*</span></label>
                   <input type="tel" id="phone" name="phone" value="<%= user ? user.phone : '' %>" placeholder="0123 456 789" required pattern="[0-9]{10,11}">
+                  <span class="error-message" id="phone-error" style="display: none; color: red;"></span>
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group full">
-                  <label for="address">Địa chỉ nhận hàng <span class="required">*</span></label>
-                  <textarea id="address" name="address" placeholder="Số nhà, đường, phường/xã, thành phố..." required minlength="10"><%= user ? user.address : '' %></textarea>
+                    <label>Khu vực giao hàng <span class="required">*</span></label>
+                    <div class="address-selectors">
+                        <select id="province" name="province">
+                            <option value="">-- Tỉnh/Thành phố --</option>
+                        </select>
+                        <select id="district" name="district" disabled>
+                            <option value="">-- Quận/Huyện --</option>
+                        </select>
+                        <select id="ward" name="ward" disabled>
+                            <option value="">-- Phường/Xã --</option>
+                        </select>
+                    </div>
+                    <span class="error-message" id="area-error" style="display: none; color: red;"></span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group full">
+                  <label for="specificAddress">Địa chỉ cụ thể <span class="required">*</span></label>
+                  <textarea id="specificAddress" name="specificAddress" placeholder="Số nhà, tên đường, tòa nhà..." required minlength="5"><%= user ? user.address : '' %></textarea>
+                  <span class="error-message" id="address-error" style="display: none; color: red;"></span>
+                  <span class="form-hint" style="font-size: 12px; color: #666;">Ví dụ: Số 10, Đường 3/2 (Không cần nhập lại Tỉnh/Thành)</span>
                 </div>
               </div>
               
@@ -199,9 +246,7 @@
 
             <% if (!user) { %>
               <div class="guest-notice">
-                <!-- <p><i class="fas fa-info-circle"></i> Đăng nhập để lưu giỏ hàng!</p>
-                <a href="/auth/login" class="btn-secondary">Đăng nhập</a> -->
-              </div>
+                </div>
             <% } %>
           </div>
         </div>
@@ -215,8 +260,80 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
   <script>
-    // --- 1. CHUYỂN ĐỔI TAB (GIỎ HÀNG <-> THANH TOÁN) ---
+    // ==========================================
+    // 1. LOGIC API ĐỊA LÝ VIỆT NAM
+    // ==========================================
+    const host = "https://provinces.open-api.vn/api/";
+    
+    var callAPI = (api) => {
+        return axios.get(api).then((response) => {
+            renderData(response.data, "province");
+        });
+    }
+    
+    callAPI(host + "?depth=1"); // Load Tỉnh/Thành ngay khi vào
+
+    var callApiDistrict = (api) => {
+        return axios.get(api).then((response) => {
+            renderData(response.data.districts, "district");
+        });
+    }
+    
+    var callApiWard = (api) => {
+        return axios.get(api).then((response) => {
+            renderData(response.data.wards, "ward");
+        });
+    }
+
+    var renderData = (array, select) => {
+        let row = ' <option value="">-- Chọn ' + (select === "province" ? "Tỉnh/Thành" : (select === "district" ? "Quận/Huyện" : "Phường/Xã")) + ' --</option>';
+        array.forEach(element => {
+            row += `<option value="${element.code}">${element.name}</option>`
+        });
+        document.querySelector("#" + select).innerHTML = row;
+    }
+
+    // Sự kiện chọn Tỉnh -> Load Huyện
+    document.querySelector("#province").addEventListener("change", () => {
+        let provinceCode = document.querySelector("#province").value;
+        const districtSelect = document.querySelector("#district");
+        const wardSelect = document.querySelector("#ward");
+        
+        districtSelect.innerHTML = '<option value="">-- Đang tải... --</option>';
+        wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+        wardSelect.disabled = true;
+
+        if(provinceCode) {
+            callApiDistrict(host + "p/" + provinceCode + "?depth=2");
+            districtSelect.disabled = false;
+        } else {
+            districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+            districtSelect.disabled = true;
+        }
+    });
+
+    // Sự kiện chọn Huyện -> Load Xã
+    document.querySelector("#district").addEventListener("change", () => {
+        let districtCode = document.querySelector("#district").value;
+        const wardSelect = document.querySelector("#ward");
+        
+        wardSelect.innerHTML = '<option value="">-- Đang tải... --</option>';
+
+        if(districtCode) {
+            callApiWard(host + "d/" + districtCode + "?depth=2");
+            wardSelect.disabled = false;
+        } else {
+            wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+            wardSelect.disabled = true;
+        }
+    });
+
+    // ==========================================
+    // 2. CHUYỂN ĐỔI TAB
+    // ==========================================
     function toggleSection(section) {
       const cartSection = document.getElementById('cart-section');
       const paymentSection = document.getElementById('payment-section');
@@ -228,7 +345,6 @@
       const continueBtn = document.getElementById('continue-shopping-btn');
 
       if (section === 'payment') {
-        // Chuyển sang thanh toán
         cartSection.style.display = 'none';
         paymentSection.style.display = 'block';
         
@@ -241,26 +357,20 @@
         placeOrderBtn.style.display = 'block';
         backBtn.style.display = 'block';
 
-        // COPY HTML GIỎ HÀNG SANG PHẦN REVIEW ĐƠN HÀNG
+        // COPY HTML GIỎ HÀNG
         const cartContent = document.getElementById('cart-items-container').cloneNode(true);
-        
-        // Loại bỏ nút xóa và input số lượng, chỉ hiện text
         const qtyBtns = cartContent.querySelectorAll('.qty-btn, .delete-btn');
         qtyBtns.forEach(btn => btn.remove());
-        
         const inputs = cartContent.querySelectorAll('.qty-input');
         inputs.forEach(inp => {
-            // Thay thế input bằng thẻ span để đẹp hơn
             const span = document.createElement('span');
             span.innerHTML = 'Số lượng: <strong>' + inp.value + '</strong>';
             inp.parentNode.replaceChild(span, inp);
         });
-
         document.getElementById('payment-cart-items-container').innerHTML = '';
         document.getElementById('payment-cart-items-container').appendChild(cartContent);
 
       } else {
-        // Quay lại giỏ hàng
         cartSection.style.display = 'block';
         paymentSection.style.display = 'none';
         
@@ -275,10 +385,11 @@
       }
     }
 
-    // --- 2. CẬP NHẬT GIỎ HÀNG (AJAX) ---
+    // ==========================================
+    // 3. CẬP NHẬT GIỎ HÀNG
+    // ==========================================
     async function updateCartItem(productId, action) {
       document.body.style.cursor = 'wait';
-      
       try {
         const inputEl = document.getElementById(`qty-${productId}`);
         let currentQty = inputEl ? parseInt(inputEl.value) : 1;
@@ -300,17 +411,12 @@
         const response = await fetch('/checkout/cart/update', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            action: action,
-            id: productId,
-            quantity: newQty
-          })
+          body: JSON.stringify({ action, id: productId, quantity: newQty })
         });
 
         const data = await response.json();
 
         if (data.success) {
-          // Cập nhật giao diện
           if (action === 'remove') {
              const itemRow = document.getElementById(`item-${productId}`);
              if (itemRow) itemRow.remove();
@@ -318,19 +424,14 @@
           } else {
              if (inputEl) inputEl.value = newQty;
           }
-
-          // Cập nhật giá tiền
+          // Cập nhật UI
           const formattedTotal = data.subtotal.toLocaleString('vi-VN');
           document.getElementById('subtotal').innerText = `₫${formattedTotal}`;
           document.getElementById('totalAmount').innerText = `₫${formattedTotal}`;
-          
-          // Cập nhật số lượng item
           document.getElementById('cart-qty-display').innerText = data.cart.length;
           document.getElementById('payment-cart-qty-display').innerText = data.cart.length;
-          
           const headerBadge = document.getElementById('cartCount');
           if(headerBadge) headerBadge.innerText = data.totalItems || data.cart.length;
-
         } else {
           alert('Lỗi: ' + data.message);
         }
@@ -342,33 +443,75 @@
       }
     }
 
-    // --- 3. ĐẶT HÀNG (COD & VNPAY) ---
+    // ==========================================
+    // 4. VALIDATE & ĐẶT HÀNG
+    // ==========================================
     async function placeOrder() {
-      // Validate
+      // Validate Form
+      let isValid = true;
       const fullName = document.getElementById('fullName').value.trim();
       const phone = document.getElementById('phone').value.trim();
-      const address = document.getElementById('address').value.trim();
+      const specificAddress = document.getElementById('specificAddress').value.trim();
       const note = document.getElementById('note').value.trim();
       
+      const province = document.getElementById('province').value;
+      const district = document.getElementById('district').value;
+      const ward = document.getElementById('ward').value;
+
       const paymentMethodEl = document.querySelector('input[name="payment"]:checked');
       const paymentMethod = paymentMethodEl ? paymentMethodEl.value : 'cod';
 
-      if (!fullName || !phone || !address) {
-        alert('Vui lòng điền đầy đủ thông tin giao hàng!');
-        return;
+      // Reset Error
+      document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+      if (!fullName) {
+        document.getElementById('fullName-error').textContent = 'Vui lòng điền họ tên!';
+        document.getElementById('fullName-error').style.display = 'block';
+        isValid = false;
+      }
+      if (!phone) {
+        document.getElementById('phone-error').textContent = 'Vui lòng điền SĐT!';
+        document.getElementById('phone-error').style.display = 'block';
+        isValid = false;
+      }
+      
+      // Check 3 cấp địa lý
+      if (!province || !district || !ward) {
+        document.getElementById('area-error').textContent = 'Vui lòng chọn đầy đủ Tỉnh, Huyện, Xã!';
+        document.getElementById('area-error').style.display = 'block';
+        isValid = false;
       }
 
+      if (!specificAddress) {
+        document.getElementById('address-error').textContent = 'Vui lòng điền địa chỉ cụ thể!';
+        document.getElementById('address-error').style.display = 'block';
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      // ===========================
+      // XỬ LÝ GỬI ĐƠN
+      // ===========================
       const btn = document.getElementById('place-order-btn');
       const originalText = btn.innerHTML;
       btn.innerHTML = '<span>Đang xử lý...</span> <i class="fas fa-spinner fa-spin"></i>';
       btn.disabled = true;
+
+      // 1. Lấy text hiển thị của Tỉnh/Huyện/Xã
+      const provinceText = document.querySelector("#province option:checked").text;
+      const districtText = document.querySelector("#district option:checked").text;
+      const wardText = document.querySelector("#ward option:checked").text;
+
+      // 2. Gộp địa chỉ đầy đủ
+      const fullAddressString = `${specificAddress}, ${wardText}, ${districtText}, ${provinceText}`;
 
       try {
         const response = await fetch('/checkout/orders/order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            customer: { fullName, phone, address, note },
+            customer: { fullName, phone, address: fullAddressString, note },
             paymentMethod
           })
         });
@@ -376,12 +519,9 @@
         const data = await response.json();
 
         if (data.success) {
-          // XỬ LÝ CHUYỂN HƯỚNG
           if (data.paymentUrl) {
-             // Nếu là VNPay -> Redirect sang ngân hàng
              window.location.href = data.paymentUrl;
           } else {
-             // Nếu là COD -> Sang trang cảm ơn
              alert('Đặt hàng thành công! Mã đơn: ' + data.orderId);
              window.location.href = data.redirectUrl || `/checkout/orders/order-complete?orderId=${data.orderId}`;
           }
