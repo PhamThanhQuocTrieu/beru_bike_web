@@ -5,6 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
     <link rel="stylesheet" href="/style/header.css">
+    
+    <style>
+        .avatar-circle {
+            width: 36px;        /* 1. Kích thước cố định */
+            height: 36px;       /* 2. Chiều cao = Chiều rộng để tạo hình vuông */
+            border-radius: 50%; /* 3. Bo tròn thành hình tròn */
+            overflow: hidden;   /* 4. Cắt bỏ phần ảnh thừa ra ngoài khung tròn */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0; /* Viền mỏng cho đẹp */
+            background-color: #f0f0f0; /* Màu nền nếu ảnh trong suốt */
+            flex-shrink: 0;     /* Ngăn khung bị co lại nếu header chật */
+        }
+
+        .avatar-circle img {
+            width: 100%;        /* Ảnh chiếm hết chiều rộng khung */
+            height: 100%;       /* Ảnh chiếm hết chiều cao khung */
+            object-fit: cover;  /* 5. QUAN TRỌNG: Cắt ảnh (crop) để lấp đầy khung mà không bị méo */
+            object-position: center; /* Căn giữa trọng tâm ảnh */
+            display: block;
+        }
+
+        /* Tùy chỉnh kích thước cho Mobile nếu cần to hơn */
+        .mobile-user-avatar .avatar-circle {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -18,7 +48,6 @@
     <nav class="nav" aria-label="Main navigation">
       <a href="/">Trang chủ</a>
       <a href="/products">Sản phẩm</a>
-      <!-- <a href="#">Thương hiệu</a> -->
       <a href="#">Khuyến mãi</a>
       <a href="#">Liên hệ</a>
     </nav>

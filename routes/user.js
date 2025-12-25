@@ -5,24 +5,28 @@ const multer = require('multer');
 const User = require('../models/User'); 
 
 // Import Controllers
-const userController = require('../controllers/userController');
-const profileController = require('../controllers/profileController');
+const userController = require('../controllers/userController'); // Chứa login, signup, getProfile
+const profileController = require('../controllers/profileController'); // Chứa updateProfile, changePassword
 
 // Import Middleware
 const { protect } = require('../middleware/auth');
 
-// --------------------- MULTER CONFIG ---------------------
+// --------------------- CẤU HÌNH MULTER (UPLOAD ẢNH) ---------------------
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    // Lưu ảnh vào thư mục public/uploads/avatars/
+    // (Hãy đảm bảo bạn đã tạo thư mục này trong dự án)
     cb(null, 'public/uploads/avatars/');
   },
   filename: function (req, file, cb) {
+    // Đặt tên file duy nhất: avatar-thời_gian-số_ngẫu_nhiên.đuôi_file
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     cb(null, 'avatar-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
 
 const fileFilter = (req, file, cb) => {
+  // Chỉ chấp nhận file ảnh (jpeg, png, jpg, webp...)
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
@@ -33,13 +37,12 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 2 * 1024 * 1024 } 
+  limits: { fileSize: 2 * 1024 * 1024 } // Giới hạn file 2MB
 });
 
 // ------------------------- ROUTES -------------------------
 
 // ======================= AUTHENTICATION ======================= //
-// Vì server.js dùng app.use("/", ...), nên ở đây PHẢI THÊM /auth thủ công vào URL
 
 // [GET] Trang đăng ký
 router.get('/auth/signup', userController.getSignup);
@@ -59,16 +62,19 @@ router.get('/auth/logout', userController.logout);
 
 // ======================= PROFILE & SETTINGS ======================= //
 
-// [POST] Cập nhật thông tin (Form gửi về /auth/profile/update)
+// [GET] Xem hồ sơ (Trang chính "Tài khoản của tôi")
+// Route này RẤT QUAN TRỌNG để hiển thị trang profile ban đầu
+router.get('/profile', protect, userController.getProfile);
+
+// [POST] Cập nhật thông tin & Avatar (Form gửi về /auth/profile/update)
 router.post(
   '/auth/profile/update', 
   protect, 
-  upload.single('avatar'), 
+  upload.single('avatar'), // Middleware xử lý upload ảnh
   profileController.updateProfile
 );
 
 // [GET] Trang đổi mật khẩu (Link: /profile/change-password)
-// Route này không cần /auth vì là trang xem nội dung
 router.get('/profile/change-password', protect, async (req, res) => {
   try {
     const user = await User.findById(req.session.user._id || req.session.user.id);
@@ -96,14 +102,13 @@ router.post(
 
 
 // ======================= OTHER FEATURES ======================= //
-// Các tính năng đang phát triển
 
 router.get('/settings', protect, (req, res) => {
   res.redirect('/profile/change-password');
 });
 
 router.get('/orders', protect, (req, res) => {
-    // Redirect sang đúng route đơn hàng trong routes/orders.js
+    // Redirect sang đúng route đơn hàng
     res.redirect('/checkout/orders/list'); 
 });
 

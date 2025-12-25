@@ -1,6 +1,6 @@
 const Order = require('../models/Order');
 
-// [GET] /checkout/orders/list - Xem danh sách đơn hàng
+// [GET] /checkout/orders/list - Xem danh sách đơn hàng (Đã thêm phân trang)
 exports.getUserOrders = async (req, res) => {
     try {
         if (!req.user || !req.user._id) {
@@ -8,15 +8,33 @@ exports.getUserOrders = async (req, res) => {
             return res.redirect('/auth/login');
         }
 
-        // Lấy danh sách đơn hàng, populate productId để lấy thông tin chi tiết nếu cần
+        // --- CẤU HÌNH PHÂN TRANG ---
+        const page = parseInt(req.query.page) || 1; // Trang hiện tại (mặc định là 1)
+        const limit = 5; // Số đơn hàng hiển thị trên mỗi trang
+        const skip = (page - 1) * limit; // Số bản ghi cần bỏ qua
+
+        // 1. Đếm tổng số đơn hàng của user để tính tổng số trang
+        const totalOrders = await Order.countDocuments({ userId: req.user._id });
+        const totalPages = Math.ceil(totalOrders / limit);
+
+        // 2. Lấy danh sách đơn hàng theo trang (skip & limit)
         const orders = await Order.find({ userId: req.user._id })
-            .sort({ createdAt: -1 })
+            .sort({ createdAt: -1 }) // Sắp xếp mới nhất lên đầu
+            .skip(skip)
+            .limit(limit)
             .populate('items.productId'); 
 
         res.render('order-list', { 
             title: 'Đơn hàng của tôi',
             orders: orders,
             user: req.user,
+            // Truyền dữ liệu phân trang sang View
+            pagination: {
+                page: page,
+                totalPages: totalPages,
+                totalOrders: totalOrders,
+                limit: limit
+            },
             messages: {
                 success: req.flash('success'),
                 error: req.flash('error')
@@ -53,12 +71,11 @@ exports.cancelOrder = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Đơn hàng đang được xử lý hoặc giao, không thể hủy ngay!' });
         }
 
-        // 3. LOGIC MỚI: Chuyển sang trạng thái "Yêu cầu hủy"
-        // (Lưu ý: Model Order phải có enum 'request_cancel' như bạn đã thêm)
+        // 3. Chuyển sang trạng thái "Yêu cầu hủy"
         order.status = 'request_cancel';
         await order.save();
 
-        // 4. Trả về JSON thành công để Frontend (fetch) nhận được
+        // 4. Trả về JSON thành công
         res.json({ 
             success: true, 
             message: 'Đã gửi yêu cầu hủy. Vui lòng chờ Admin xác nhận.' 
@@ -66,7 +83,6 @@ exports.cancelOrder = async (req, res) => {
 
     } catch (error) {
         console.error('Cancel Order Error:', error);
-        // Trả về JSON lỗi hệ thống để Frontend hiển thị alert
         res.status(500).json({ success: false, message: 'Lỗi hệ thống: ' + error.message });
     }
 };
@@ -78,7 +94,7 @@ exports.getOrderDetail = async (req, res) => {
         
         // Tìm đơn hàng của user hiện tại và populate thông tin sản phẩm
         const order = await Order.findOne({ _id: orderId, userId: req.user._id })
-            .populate('items.productId'); // Populate để lấy _id sản phẩm cho link "Mua lại"
+            .populate('items.productId'); 
 
         if (!order) {
             req.flash('error', 'Không tìm thấy đơn hàng!');

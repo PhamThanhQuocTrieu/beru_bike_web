@@ -13,26 +13,55 @@
     <link rel="icon" type="image/x-icon" href="/image/logo/favicon.png">
     
     <style>
+        /* --- PAGINATION STYLES --- */
         .pagination-container {
-            margin-top: 30px;
+            margin-top: 40px;
             display: flex;
             justify-content: center;
-            gap: 10px;
+            align-items: center;
+            gap: 5px;
         }
+
         .page-btn, .page-number {
-            padding: 8px 16px;
-            border: 1px solid #ddd;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e0e0e0;
             background-color: #fff;
-            color: #333;
+            color: #555;
             text-decoration: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 0;
         }
-        .page-number.active, .page-btn:hover, .page-number:hover {
-            background-color: #000; /* Màu chủ đạo của bạn */
+
+        .page-btn {
+            width: auto;
+            padding: 0 15px;
+        }
+
+        .page-btn:hover, .page-number:hover {
+            background-color: #f8f9fa;
+            border-color: #ccc;
+            color: #ee4d2d;
+        }
+
+        .page-number.active {
+            background-color: #ee4d2d;
             color: #fff;
-            border-color: #000;
+            border-color: #ee4d2d;
+        }
+
+        .page-btn.disabled, .page-number.disabled {
+            background-color: #f0f0f0;
+            color: #aaa;
+            cursor: not-allowed;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -106,12 +135,20 @@
                                 <span>Xe đạp trẻ em</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="bike-type" value="xe đạp đường phố">
-                                <span>Xe đạp đường phố</span>
+                                <input type="checkbox" name="bike-type" value="xe đạp địa hình">
+                                <span>Xe đạp địa hình</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="bike-type" value="xe đạp đua">
+                                <span>Xe đạp đua</span>
                             </label>
                             <label class="checkbox-label">
                                 <input type="checkbox" name="bike-type" value="xe đạp thể thao">
                                 <span>Xe đạp thể thao</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="bike-type" value="xe đạp đường phố">
+                                <span>Xe đạp đường phố</span>
                             </label>
                         </div>
                     </div>
@@ -197,70 +234,65 @@
         </div>
     </main>
 
-           <!-- FOOTER -->
-          <footer>
-            <div class="footer-container">
-              <!-- Cột 1 -->
-              <div class="footer-col">
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
                 <h4>THÔNG TIN</h4>
                 <ul>
-                  <li><a href="#">Giới thiệu</a></li>
-                  <li><a href="#">Danh sách đại lý</a></li>
-                  <li><a href="#">Địa điểm sửa chữa</a></li>
-                  <li><a href="#">Chính sách bảo hành</a></li>
-                  <li><a href="#">Chính sách thanh toán</a></li>
-                  <li><a href="#">Chính sách vận chuyển và giao nhận</a></li>
-                  <li><a href="#">Chính sách đổi trả và hoàn tiền</a></li>
-                  <li><a href="#">Chính sách bảo mật thông tin</a></li>
-                  <li><a href="#">Hoạt động cộng đồng</a></li>
+                    <li><a href="#">Giới thiệu</a></li>
+                    <li><a href="#">Danh sách đại lý</a></li>
+                    <li><a href="#">Địa điểm sửa chữa</a></li>
+                    <li><a href="#">Chính sách bảo hành</a></li>
+                    <li><a href="#">Chính sách thanh toán</a></li>
+                    <li><a href="#">Chính sách vận chuyển và giao nhận</a></li>
+                    <li><a href="#">Chính sách đổi trả và hoàn tiền</a></li>
+                    <li><a href="#">Chính sách bảo mật thông tin</a></li>
+                    <li><a href="#">Hoạt động cộng đồng</a></li>
                 </ul>
-              </div>
+            </div>
 
-              <!-- Cột 2 -->
-              <div class="footer-col">
+            <div class="footer-col">
                 <h4>SẢN PHẨM</h4>
                 <ul>
-                  <li><a href="#">Xe Đạp Thể Thao</a></li>
-                  <li><a href="#">Xe Đạp Phổ Thông</a></li>
-                  <li><a href="#">Xe Đạp Trẻ Em</a></li>
-                  <li><a href="#">Phụ Kiện</a></li>
-                  <li><a href="#">Cannondale</a></li>
+                    <li><a href="#">Xe Đạp Thể Thao</a></li>
+                    <li><a href="#">Xe Đạp Phổ Thông</a></li>
+                    <li><a href="#">Xe Đạp Trẻ Em</a></li>
+                    <li><a href="#">Phụ Kiện</a></li>
+                    <li><a href="#">Cannondale</a></li>
                 </ul>
 
                 <h4>TIN TỨC</h4>
                 <ul>
-                  <li><a href="#">Quan hệ cổ đông</a></li>
-                  <li><a href="#">Tin tức công ty</a></li>
-                  <li><a href="#">Tin tức xe đạp</a></li>
-                  <li><a href="#">Tuyển dụng</a></li>
+                    <li><a href="#">Quan hệ cổ đông</a></li>
+                    <li><a href="#">Tin tức công ty</a></li>
+                    <li><a href="#">Tin tức xe đạp</a></li>
+                    <li><a href="#">Tuyển dụng</a></li>
                 </ul>
-              </div>
+            </div>
 
-              <!-- Cột 3 -->
-              <div class="footer-col">
+            <div class="footer-col">
                 <h4>LIÊN HỆ</h4>
                 <p><b>NHÀ MÁY SẢN XUẤT:</b><br>Lô A2CN3, Cụm công nghiệp Tây Sơn Hiên, Phường An Hòa, TP.Cần Thơ</p>
                 <p><b>CHI NHÁNH MIỀN NAM:</b><br>19/12C, Đường A!0, Khu công nghiệp Tân Hiệp, Quận Tân Bình, TP.HCM</p>
                 <p>Email: <a href="mailto:brbike@gmail.com.vn">brbike@gmail.com.vn</a></p>
-              </div>
+            </div>
 
-              <!-- Cột 4 -->
-              <div class="footer-col">
+            <div class="footer-col">
                 <h4>CÔNG TY CỔ PHẦN BERU BIKE CẦN THƠ</h4>
                 <p>GPKD Số 0130150828 - cấp ngày 28/08/2022</p>
                 <p>Số 10B Lý Tự Trọng, Ninh Kiều, Cần Thơ</p>
                 <h2>038 960 3429</h2>
                 <div class="social">
-                  <a href=""><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
-                  <a href=""><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube"></a>
+                    <a href=""><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+                    <a href=""><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube"></a>
                 </div>
-              </div>
             </div>
+        </div>
 
-            <div class="footer-bottom">
-              <p>© <span id="year"></span> Xe Đạp Beru Bike</p>
-            </div>
-          </footer>
+        <div class="footer-bottom">
+            <p>© <span id="year"></span> Xe Đạp Beru Bike</p>
+        </div>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -278,7 +310,7 @@
                 });
             }
 
-            // Click Handler for Products (Delegation is better but direct loop works too)
+            // Click Handler for Products
             document.querySelectorAll('.product-card').forEach(card => {
                 card.addEventListener('click', function (e) {
                     if (e.target.closest('.add-btn')) return;
@@ -287,10 +319,9 @@
                 });
             });
 
-            // Initial Filter Load from URL (if any)
+            // Initial Filter Load from URL
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('brands') || urlParams.has('bikeTypes') || urlParams.has('priceRanges')) {
-                // Set checked status
                 if(urlParams.has('brands')) {
                     urlParams.get('brands').split(',').forEach(b => {
                         const el = document.querySelector(`input[name="brand"][value="${b}"]`);
@@ -299,7 +330,9 @@
                 }
                 if(urlParams.has('bikeTypes')) {
                     urlParams.get('bikeTypes').split(',').forEach(t => {
-                        const el = document.querySelector(`input[name="bike-type"][value="${t}"]`);
+                        // Decode URI component để xử lý tiếng Việt trên URL
+                        const decodedT = decodeURIComponent(t);
+                        const el = document.querySelector(`input[name="bike-type"][value="${decodedT}"]`);
                         if(el) el.checked = true;
                     });
                 }
@@ -309,10 +342,6 @@
                         if(el) el.checked = true;
                     });
                 }
-                // Nếu có filter trên URL thì gọi AJAX để render lại đúng filter đó
-                // Tuy nhiên, nếu server đã render đúng (SSR) thì không cần gọi lại, 
-                // trừ khi bạn muốn đảm bảo tính năng dynamic. 
-                // Ở đây ta có thể skip gọi applyFilters() lúc đầu nếu Controller đã render đúng trang 1.
             }
         });
 
@@ -323,7 +352,7 @@
         function applyFilters() {
             clearTimeout(filterTimeout);
             filterTimeout = setTimeout(() => {
-                loadData(1); // Reset về trang 1 khi thay đổi filter
+                loadData(1);
             }, 300);
         }
 
@@ -332,27 +361,22 @@
         }
 
         function loadData(page) {
-            // Hiển thị loading
             document.getElementById('loadingSpinner').style.display = 'block';
             document.getElementById('productGrid').style.opacity = '0.5';
 
-            // Thu thập dữ liệu từ checkbox
             const brands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
             const bikeTypes = Array.from(document.querySelectorAll('input[name="bike-type"]:checked')).map(cb => cb.value);
             const priceRanges = Array.from(document.querySelectorAll('input[name="price-range"]:checked')).map(cb => cb.value);
 
-            // Tạo URL Params
             const params = new URLSearchParams();
             if (brands.length > 0) params.append('brands', brands.join(','));
             if (bikeTypes.length > 0) params.append('bikeTypes', bikeTypes.join(','));
             if (priceRanges.length > 0) params.append('priceRanges', priceRanges.join(','));
             params.append('page', page);
 
-            // Update Browser URL (không reload trang)
             const newUrl = `/products?${params.toString()}`;
             history.pushState({ brands, bikeTypes, priceRanges, page }, '', newUrl);
 
-            // Fetch Data
             fetch(`/products/filter?${params.toString()}`)
                 .then(response => {
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -363,11 +387,9 @@
                     updatePagination(data);
                     updateCount(data.total);
                     
-                    // Ẩn loading
                     document.getElementById('loadingSpinner').style.display = 'none';
                     document.getElementById('productGrid').style.opacity = '1';
                     
-                    // Scroll lên đầu grid cho user dễ nhìn
                     document.querySelector('.product-layout').scrollIntoView({ behavior: 'smooth' });
                 })
                 .catch(error => {
@@ -378,13 +400,11 @@
                 });
         }
 
-        // Render lại Grid sản phẩm
         function updateProductGrid(products) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = ''; 
             if (products.length > 0) {
                 products.forEach(product => {
-                    // Tính toán logic hiển thị giá
                     let priceHtml = '';
                     if (product.oldPrice && product.oldPrice > product.price) {
                         const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice * 100));
@@ -419,29 +439,24 @@
             }
         }
 
-        // Render lại Pagination bằng JS
         function updatePagination(data) {
             const pagination = document.getElementById('pagination');
             pagination.innerHTML = '';
             
-            // data.totalPages đến từ JSON của Controller
             if (data.totalPages > 1) {
-                pagination.style.display = 'flex'; // Hiện pagination
+                pagination.style.display = 'flex';
 
-                // Nút Previous
                 if (data.currentPage > 1) {
                     const prev = createPageLink('« Trước', data.currentPage - 1);
                     pagination.appendChild(prev);
                 }
 
-                // Các nút số
                 for (let i = 1; i <= data.totalPages; i++) {
                     const pageLink = createPageLink(i, i);
                     if (i === data.currentPage) pageLink.classList.add('active');
                     pagination.appendChild(pageLink);
                 }
 
-                // Nút Next
                 if (data.currentPage < data.totalPages) {
                     const next = createPageLink('Tiếp »', data.currentPage + 1);
                     pagination.appendChild(next);
@@ -451,14 +466,13 @@
             }
         }
 
-        // Helper tạo link phân trang
         function createPageLink(text, pageNum) {
             const a = document.createElement('a');
-            a.href = `?page=${pageNum}`; // Vẫn giữ href để chuột phải mở tab mới được
+            a.href = `?page=${pageNum}`;
             a.className = typeof text === 'number' ? 'page-number' : 'page-btn';
             a.innerHTML = text;
             a.onclick = (e) => {
-                e.preventDefault(); // Chặn reload trang
+                e.preventDefault();
                 loadPage(pageNum);
             };
             return a;
@@ -466,19 +480,15 @@
 
         function updateCount(total) {
             const count = document.querySelector('.count');
-            // Nếu thẻ count chưa tồn tại (khi chưa search), ta có thể tạo nó hoặc bỏ qua
             if (count) count.innerHTML = `Tìm thấy ${total} sản phẩm`;
         }
 
-        // Event Listeners cho Checkbox
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', applyFilters);
         });
 
-        // Back/Forward Browser Button Support
         window.addEventListener('popstate', function (e) {
             if (e.state) {
-                // Restore checkbox status
                 document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
                 
                 if (e.state.brands) e.state.brands.forEach(b => {
@@ -489,9 +499,11 @@
                      const el = document.querySelector(`input[name="bike-type"][value="${t}"]`);
                      if(el) el.checked = true;
                 });
-                // ... (Restore priceRanges tương tự)
+                if (e.state.priceRanges) e.state.priceRanges.forEach(p => {
+                     const el = document.querySelector(`input[name="price-range"][value="${p}"]`);
+                     if(el) el.checked = true;
+                });
                 
-                // Load data theo state
                 loadData(e.state.page || 1);
             }
         });

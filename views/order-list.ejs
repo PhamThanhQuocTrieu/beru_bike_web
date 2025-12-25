@@ -29,140 +29,191 @@
             color: #856404;
             border: 1px solid #ffeeba;
         }
+
+        /* --- CSS PHÂN TRANG (PAGINATION) --- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            gap: 5px;
+        }
+
+        .page-link {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+            background: #fff;
+        }
+
+        .page-link:hover {
+            background-color: #f8f9fa;
+            border-color: #ccc;
+            color: #ee4d2d;
+        }
+
+        .page-link.active {
+            background-color: #ee4d2d;
+            color: #fff;
+            border-color: #ee4d2d;
+        }
+
+        .page-link.disabled {
+            background-color: #eee;
+            color: #aaa;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
     </style>
 </head>
 
 <body>
     <%- include('header') %>
 
-        <div class="container order-container">
-            <h2 class="page-title"><i class="fas fa-box"></i> Đơn hàng của tôi</h2>
+    <div class="container order-container">
+        <h2 class="page-title"><i class="fas fa-box"></i> Đơn hàng của tôi</h2>
 
-            <% if (orders && orders.length> 0) { %>
-                <div class="order-list">
-                    <% orders.forEach(order=> { %>
-                        <div class="order-card" id="order-<%= order._id %>"
-                            onclick="window.location.href='/checkout/orders/detail/<%= order._id %>'">
+        <% if (orders && orders.length > 0) { %>
+            <div class="order-list">
+                <% orders.forEach(order => { %>
+                    <div class="order-card" id="order-<%= order._id %>"
+                        onclick="window.location.href='/checkout/orders/detail/<%= order._id %>'">
 
-                            <div class="order-header">
-                                <div class="order-id">
-                                    <strong>#<%= order._id.toString().slice(-6).toUpperCase() %></strong>
-                                    <span class="order-date">
-                                        <%= new Date(order.createdAt).toLocaleDateString('vi-VN') %>
-                                    </span>
-                                </div>
-
-                                <% let statusClass='' , statusText='' , statusIcon='' ; switch(order.status) {
-                                    case 'pending' : statusClass='pending' ; statusText='Chờ xử lý' ;
-                                    statusIcon='fa-clock' ; break; case 'shipping' : statusClass='shipping' ;
-                                    statusText='Đang giao' ; statusIcon='fa-truck' ; break; case 'completed' :
-                                    statusClass='completed' ; statusText='Hoàn thành' ; statusIcon='fa-check-circle' ;
-                                    break; case 'cancelled' : statusClass='cancelled' ; statusText='Đã hủy' ;
-                                    statusIcon='fa-ban' ; break; // *** THÊM CASE MỚI CHO YÊU CẦU HỦY ***
-                                    case 'request_cancel' : statusClass='request_cancel' ; statusText='Đang chờ hủy' ;
-                                    statusIcon='fa-hourglass-half' ; break; default: statusClass='default' ;
-                                    statusText=order.status; statusIcon='fa-info-circle' ; } %>
-                                    <span class="status-badge <%= statusClass %>">
-                                        <i class="fas <%= statusIcon %>"></i>
-                                        <%= statusText %>
-                                    </span>
+                        <div class="order-header">
+                            <div class="order-id">
+                                <strong>#<%= order._id.toString().slice(-6).toUpperCase() %></strong>
+                                <span class="order-date">
+                                    <%= new Date(order.createdAt).toLocaleDateString('vi-VN') %>
+                                </span>
                             </div>
 
-                            <div class="order-body">
-                                <div class="product-list">
-                                    <% order.items.forEach(item=> { %>
-                                        <div class="product-item">
-                                            <img src="<%= item.image || '/image/icon/image.png' %>"
-                                                alt="<%= item.name %>">
-                                            <div class="product-info">
-                                                <p class="name">
-                                                    <%= item.name %>
-                                                </p>
-                                                <p class="qty">x<%= item.quantity %>
-                                                </p>
-                                            </div>
-                                            <p class="price">₫<%= (item.price * item.quantity).toLocaleString('vi-VN')
-                                                    %>
-                                            </p>
+                            <% 
+                                let statusClass='', statusText='', statusIcon=''; 
+                                switch(order.status) {
+                                    case 'pending': statusClass='pending'; statusText='Chờ xử lý'; statusIcon='fa-clock'; break; 
+                                    case 'confirmed': statusClass='confirmed'; statusText='Đã xác nhận'; statusIcon='fa-clipboard-check'; break; 
+                                    case 'shipping': statusClass='shipping'; statusText='Đang giao'; statusIcon='fa-truck'; break; 
+                                    case 'completed': statusClass='completed'; statusText='Hoàn thành'; statusIcon='fa-check-circle'; break; 
+                                    case 'cancelled': statusClass='cancelled'; statusText='Đã hủy'; statusIcon='fa-ban'; break; 
+                                    case 'request_cancel': statusClass='request_cancel'; statusText='Đang chờ hủy'; statusIcon='fa-hourglass-half'; break; 
+                                    default: statusClass='default'; statusText=order.status; statusIcon='fa-info-circle'; 
+                                } 
+                            %>
+                            <span class="status-badge <%= statusClass %>">
+                                <i class="fas <%= statusIcon %>"></i>
+                                <%= statusText %>
+                            </span>
+                        </div>
+
+                        <div class="order-body">
+                            <div class="product-list">
+                                <% order.items.forEach(item => { %>
+                                    <div class="product-item">
+                                        <img src="<%= item.image || '/image/icon/image.png' %>" alt="<%= item.name %>">
+                                        <div class="product-info">
+                                            <p class="name"><%= item.name %></p>
+                                            <p class="qty">x<%= item.quantity %></p>
                                         </div>
-                                        <% }) %>
-                                </div>
-                            </div>
-
-                            <div class="order-footer">
-                                <div class="total-money">
-                                    Tổng tiền <strong>₫<%= (order.totalAmount ||
-                                            order.totalPrice).toLocaleString('vi-VN') %></strong>
-                                </div>
-                                <div class="actions">
-                                    <% if (order.status==='pending' ) { %>
-                                        <button class="btn-cancel"
-                                            onclick="event.stopPropagation(); requestCancel('<%= order._id %>')">
-                                            <i class="fas fa-times"></i> Hủy đơn
-                                        </button>
-                                        <% } %>
-                                </div>
+                                        <p class="price">₫<%= (item.price * item.quantity).toLocaleString('vi-VN') %></p>
+                                    </div>
+                                <% }) %>
                             </div>
                         </div>
-                        <% }) %>
-                </div>
-                <% } else { %>
-                    <div class="empty-state">
-                        <img src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-2130356-1800917.png"
-                            alt="Trống">
-                        <h3>Bạn chưa có đơn hàng nào</h3>
-                        <a href="/products" class="btn-shopping">Mua sắm ngay</a>
+
+                        <div class="order-footer">
+                            <div class="total-money">
+                                Tổng tiền <strong>₫<%= (order.totalAmount || order.totalPrice).toLocaleString('vi-VN') %></strong>
+                            </div>
+                            <div class="actions">
+                                <% if (order.status === 'pending') { %>
+                                    <button class="btn-cancel" onclick="event.stopPropagation(); requestCancel('<%= order._id %>')">
+                                        <i class="fas fa-times"></i> Hủy đơn
+                                    </button>
+                                <% } %>
+                            </div>
+                        </div>
                     </div>
-                    <% } %>
-        </div>
-
-        <footer>
-            <div class="footer-bottom">
-                <p>© 2025 Xe Đạp Beru Bike</p>
+                <% }) %>
             </div>
-        </footer>
 
-        <script>
-            async function requestCancel(orderId) {
-                // Xác nhận trước khi gửi
-                if (!confirm('Bạn có chắc chắn muốn gửi yêu cầu hủy đơn hàng này? Admin sẽ duyệt yêu cầu của bạn.')) return;
+            <% if (pagination && pagination.totalPages > 1) { %>
+                <div class="pagination">
+                    <a href="?page=<%= pagination.page - 1 %>" 
+                       class="page-link <%= pagination.page <= 1 ? 'disabled' : '' %>">
+                       <i class="fas fa-chevron-left"></i>
+                    </a>
 
-                const btn = document.querySelector(`#order-${orderId} .btn-cancel`);
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
-                btn.disabled = true;
+                    <% for(let i = 1; i <= pagination.totalPages; i++) { %>
+                        <a href="?page=<%= i %>" 
+                           class="page-link <%= pagination.page === i ? 'active' : '' %>">
+                           <%= i %>
+                        </a>
+                    <% } %>
 
-                try {
-                    // Gọi API hủy đơn (trả về JSON)
-                    const response = await fetch(`/checkout/orders/cancel/${orderId}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' }
-                    });
+                    <a href="?page=<%= pagination.page + 1 %>" 
+                       class="page-link <%= pagination.page >= pagination.totalPages ? 'disabled' : '' %>">
+                       <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+                <div style="text-align: center; margin-top: 10px; color: #777; font-size: 13px;">
+                    Hiển thị trang <%= pagination.page %> / <%= pagination.totalPages %> (Tổng <%= pagination.totalOrders %> đơn hàng)
+                </div>
+            <% } %>
+            <% } else { %>
+            <div class="empty-state">
+                <img src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-2130356-1800917.png" alt="Trống">
+                <h3>Bạn chưa có đơn hàng nào</h3>
+                <a href="/products" class="btn-shopping">Mua sắm ngay</a>
+            </div>
+        <% } %>
+    </div>
 
-                    // Xử lý kết quả trả về
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
+    <footer>
+        <div class="footer-bottom">
+            <p>© 2025 Xe Đạp Beru Bike</p>
+        </div>
+    </footer>
 
-                    const data = await response.json();
+    <script>
+        async function requestCancel(orderId) {
+            if (!confirm('Bạn có chắc chắn muốn gửi yêu cầu hủy đơn hàng này? Admin sẽ duyệt yêu cầu của bạn.')) return;
 
-                    if (data.success) {
-                        alert('Đã gửi yêu cầu hủy thành công! Vui lòng chờ Admin phê duyệt.');
-                        location.reload(); // Tải lại trang để cập nhật trạng thái mới
-                    } else {
-                        alert('Lỗi: ' + data.message);
-                        // Reset nút nếu lỗi logic
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    }
-                } catch (error) {
-                    console.error(error);
-                    alert('Lỗi kết nối server hoặc lỗi hệ thống.');
+            const btn = document.querySelector(`#order-${orderId} .btn-cancel`);
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`/checkout/orders/cancel/${orderId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Đã gửi yêu cầu hủy thành công! Vui lòng chờ Admin phê duyệt.');
+                    location.reload(); 
+                } else {
+                    alert('Lỗi: ' + data.message);
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 }
+            } catch (error) {
+                console.error(error);
+                alert('Lỗi kết nối server hoặc lỗi hệ thống.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
-        </script>
+        }
+    </script>
 </body>
-
 </html>

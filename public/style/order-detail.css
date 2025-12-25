@@ -339,21 +339,25 @@ body {
     padding-top: 20px;
 }
 
+/* Style cho nút Hủy Đơn Hàng */
 .btn-cancel-detail {
-    background: #fff;
-    border: 1px solid #ddd;
+    background: #fff;       /* Nền trắng */
+    color: #dc3545;         /* Chữ đỏ */
+    border: 1px solid #dc3545; /* Viền đỏ */
     padding: 10px 30px;
+    border-radius: 4px;
     cursor: pointer;
-    color: #555;
-    border-radius: 2px;
     font-size: 14px;
-    transition: 0.3s;
+    font-weight: 500;
+    transition: all 0.3s ease; /* Hiệu ứng chuyển mượt */
 }
 
+/* Hiệu ứng khi di chuột vào (Hover) */
 .btn-cancel-detail:hover {
-    background: #f8f8f8;
-    border-color: #ccc;
-    color: #333;
+    background: #dc3545;    /* Nền đỏ */
+    color: #fff;            /* Chữ trắng */
+    border-color: #dc3545;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3); /* Bóng đổ nhẹ cho đẹp */
 }
 
 /* =========================================

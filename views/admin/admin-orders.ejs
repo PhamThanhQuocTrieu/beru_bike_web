@@ -21,13 +21,89 @@
       border: 2px solid #e0e7ff;
     }
 
-    /* Style cho nút hủy của Admin */
-    .btn-admin-cancel {
-      background: #dc3545;
+    /* Style cho các nút hành động Admin */
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: opacity 0.2s;
     }
 
-    .btn-admin-cancel:hover {
-      background: #c82333;
+    .btn-icon:hover {
+      opacity: 0.8;
+    }
+
+    .btn-confirm {
+      background-color: #17a2b8;
+    }
+
+    /* Màu xanh dương nhạt: Xác nhận */
+    .btn-ship {
+      background-color: #ffc107;
+      color: #333;
+    }
+
+    /* Màu vàng: Giao hàng */
+    .btn-complete {
+      background-color: #28a745;
+    }
+
+    /* Màu xanh lá: Hoàn thành */
+    .btn-approve {
+      background-color: #28a745;
+    }
+
+    .btn-reject {
+      background-color: #6c757d;
+    }
+
+    .btn-admin-cancel {
+      background-color: #dc3545;
+    }
+
+    /* Màu đỏ: Hủy */
+
+    /* Badge trạng thái - Đồng bộ màu sắc với Client */
+    .badge {
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      color: white;
+      display: inline-block;
+      min-width: 90px;
+      text-align: center;
+    }
+
+    .status-pending {
+      background-color: #ffc107;
+      color: #333;
+    }
+
+    .status-confirmed {
+      background-color: #17a2b8;
+    }
+
+    .status-shipping {
+      background-color: #007bff;
+    }
+
+    .status-completed {
+      background-color: #28a745;
+    }
+
+    .status-cancelled {
+      background-color: #dc3545;
+    }
+
+    .status-request_cancel {
+      background-color: #d81717;
     }
   </style>
 </head>
@@ -41,9 +117,8 @@
         <ul>
           <li><a href="/admin">Dashboard</a></li>
           <li><a href="/admin/products">Sản phẩm</a></li>
-          <li><a href="/admin/users">Người dùng</a></li>
           <li><a href="/admin/orders" class="active">Đơn hàng</a></li>
-          <!-- <li><a href="/admin/reports">Báo cáo</a></li> -->
+          <li><a href="/admin/users">Người dùng</a></li>
         </ul>
       </nav>
       <div class="user-profile">
@@ -54,7 +129,6 @@
               <%= user.firstName.charAt(0).toUpperCase() %>
             </div>
             <% } %>
-
               <div class="user-info-text">
                 <span class="u-name">
                   <%= user.firstName %>
@@ -73,7 +147,6 @@
       <li><a href="/admin/products"><i class="fas fa-box"></i> Sản phẩm</a></li>
       <li><a href="/admin/orders" class="active"><i class="fas fa-shopping-cart"></i> Đơn hàng</a></li>
       <li><a href="/admin/users"><i class="fas fa-users"></i> Khách hàng</a></li>
-      <!-- <li><a href="/admin/reports"><i class="fas fa-chart-line"></i> Báo cáo</a></li> -->
       <li style="margin-top: auto;"><a href="/admin/settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
     </ul>
   </aside>
@@ -95,9 +168,9 @@
                   <th>Mã đơn</th>
                   <th>Khách hàng</th>
                   <th>Sản phẩm</th>
-                  <th>Tổng tiền / TT</th>
+                  <th>Tổng tiền / Trạng thái</th>
                   <th>Trạng thái</th>
-                  <th>Hành động</th>
+                  <th>Hành động (Duyệt)</th>
                 </tr>
               </thead>
               <tbody>
@@ -117,11 +190,11 @@
                         <strong>
                           <%= order.shippingAddress.fullName %>
                         </strong>
-                        <small>
+                        <small style="display:block; color:#666">
                           <%= order.shippingAddress.phone %>
                         </small>
-                        <div class="customer-address">
-                          <%= order.shippingAddress.address %>, <%= order.shippingAddress.ward %>
+                        <div class="customer-address" style="font-size: 12px; color: #555; max-width: 200px;">
+                          <%= order.shippingAddress.address %>
                         </div>
                       </div>
                     </td>
@@ -138,37 +211,37 @@
                     </td>
 
                     <td>
-                      <div class="price-text">
+                      <div class="price-text" style="color:#d0011b; font-weight:bold;">
                         <%= order.totalPrice.toLocaleString('vi-VN') %> đ
                       </div>
                       <div style="margin-top: 5px;">
-                        <span class="method-text">
-                          <%= order.paymentMethod %>
+                        <span style="font-size: 11px; background: #eee; padding: 2px 6px; border-radius: 4px;">
+                          <%= order.paymentMethod==='vnpay' ? 'VNPAY' : 'COD' %>
                         </span>
                         <br>
-                        <% let payClass='pay-pending' ; if(order.paymentStatus==='paid' ) payClass='pay-paid' ;
-                          if(order.paymentStatus==='failed' ) payClass='pay-failed' ; %>
-                          <span class="pay-badge <%= payClass %>">
-                            <%= order.paymentStatus==='paid' ? 'Đã thanh toán' : 'Chưa thanh toán' %>
-                          </span>
+                        <% if (order.paymentStatus==='paid' ) { %>
+                          <span style="color: green; font-size: 11px; font-weight: bold;">✔ Đã thanh toán</span>
+                          <% } else if (order.paymentStatus==='failed' ) { %>
+                            <span style="color: red; font-size: 11px;">✖ Thất bại</span>
+                            <% } else { %>
+                              <span style="color: orange; font-size: 11px;">Chờ thanh toán</span>
+                              <% } %>
                       </div>
                     </td>
 
                     <td>
-                      <% let statusLabel='' ; let statusClass='status-' + order.status; switch(order.status) {
-                        case 'pending' : statusLabel='Chờ xử lý' ; break; case 'confirmed' : statusLabel='Đã xác nhận' ;
-                        break; case 'preparing' : statusLabel='Chuẩn bị hàng' ; break; case 'shipping' :
-                        statusLabel='Đang giao' ; break; case 'delivered' : statusLabel='Đã giao hàng' ; break;
-                        case 'completed' : statusLabel='Hoàn thành' ; break; case 'cancelled' : statusLabel='Đã hủy' ;
-                        break; case 'request_cancel' : statusLabel='Yêu cầu hủy' ; break; default:
-                        statusLabel=order.status; } %>
-                        <span class="badge <%= statusClass %>">
+                      <% let statusLabel='' ; switch(order.status) { case 'pending' : statusLabel='Chờ xử lý' ; break;
+                        case 'confirmed' : statusLabel='Đã xác nhận' ; break; // [MỚI] case 'shipping' :
+                        statusLabel='Đang giao' ; break; case 'completed' : statusLabel='Hoàn thành' ; break;
+                        case 'cancelled' : statusLabel='Đã hủy' ; break; case 'request_cancel' :
+                        statusLabel='Yêu cầu hủy' ; break; default: statusLabel=order.status; } %>
+                        <span class="badge status-<%= order.status %>">
                           <%= statusLabel %>
                         </span>
                     </td>
 
                     <td>
-                      <div class="action-group">
+                      <div class="action-group" style="display: flex; gap: 5px;">
 
                         <% if (order.status==='request_cancel' ) { %>
                           <form action="/admin/orders/handle-cancel" method="POST"
@@ -176,7 +249,7 @@
                             <input type="hidden" name="orderId" value="<%= order._id %>">
                             <input type="hidden" name="action" value="approve">
                             <button type="submit" class="btn-icon btn-approve" title="Duyệt hủy"><i
-                                class="fas fa-check"></i> Duyệt</button>
+                                class="fas fa-check"></i></button>
                           </form>
                           <form action="/admin/orders/handle-cancel" method="POST">
                             <input type="hidden" name="orderId" value="<%= order._id %>">
@@ -185,39 +258,36 @@
                                 class="fas fa-times"></i></button>
                           </form>
 
-                          <% } else if (order.status==='pending' || order.status==='confirmed' ) { %>
-                            <div style="display: flex; gap: 5px;">
+                          <% } else if (order.status==='pending' ) { %>
+                            <form action="/admin/orders/update-status" method="POST">
+                              <input type="hidden" name="orderId" value="<%= order._id %>">
+                              <input type="hidden" name="status" value="confirmed"> <button class="btn-icon btn-confirm"
+                                title="Xác nhận & Chuẩn bị hàng">
+                                <i class="fas fa-clipboard-check"></i>
+                              </button>
+                            </form>
+
+                            <form action="/admin/orders/admin-cancel" method="POST"
+                              onsubmit="return confirm('Bạn có chắc chắn muốn HỦY đơn hàng này?');">
+                              <input type="hidden" name="orderId" value="<%= order._id %>">
+                              <button class="btn-icon btn-admin-cancel" title="Hủy đơn"><i
+                                  class="fas fa-trash-alt"></i></button>
+                            </form>
+
+                            <% } else if (order.status==='confirmed' ) { %>
                               <form action="/admin/orders/update-status" method="POST">
                                 <input type="hidden" name="orderId" value="<%= order._id %>">
-                                <input type="hidden" name="status" value="shipping">
-                                <button class="btn-icon btn-ship" title="Xác nhận giao hàng">
+                                <input type="hidden" name="status" value="shipping"> <button class="btn-icon btn-ship"
+                                  title="Bắt đầu giao hàng">
                                   <i class="fas fa-truck"></i>
                                 </button>
                               </form>
 
-                              <form action="/admin/orders/admin-cancel" method="POST"
-                                onsubmit="return confirm('Bạn có chắc muốn HỦY đơn hàng này không? Hành động này không thể hoàn tác.');">
-                                <input type="hidden" name="orderId" value="<%= order._id %>">
-                                <button class="btn-icon btn-admin-cancel" title="Hủy đơn hàng">
-                                  <i class="fas fa-trash-alt"></i>
-                                </button>
-                              </form>
-                            </div>
-
-                            <% } else if (order.status==='shipping' ) { %>
-                              <form action="/admin/orders/update-status" method="POST">
-                                <input type="hidden" name="orderId" value="<%= order._id %>">
-                                <input type="hidden" name="status" value="delivered">
-                                <button class="btn-icon btn-deliver" title="Xác nhận đã giao hàng">
-                                  <i class="fas fa-hand-holding-usd"></i>
-                                </button>
-                              </form>
-
-                              <% } else if (order.status==='delivered' ) { %>
+                              <% } else if (order.status==='shipping' ) { %>
                                 <form action="/admin/orders/update-status" method="POST">
                                   <input type="hidden" name="orderId" value="<%= order._id %>">
-                                  <input type="hidden" name="status" value="completed">
-                                  <button class="btn-icon btn-complete" title="Hoàn tất đơn hàng">
+                                  <input type="hidden" name="status" value="completed"> <button
+                                    class="btn-icon btn-complete" title="Xác nhận đã giao thành công">
                                     <i class="fas fa-check-circle"></i>
                                   </button>
                                 </form>

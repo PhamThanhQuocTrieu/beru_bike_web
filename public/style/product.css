@@ -282,75 +282,7 @@ body {
   text-decoration: line-through;
 }
 
-/* Pagination Styles */
-#pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 30px 0;
-  padding: 10px 0;
-  gap: 5px;
-  flex-wrap: wrap; /* Responsive cho mobile */
-}
 
-#pagination a.page-btn,
-#pagination a.page-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  height: 40px;
-  padding: 8px 12px;
-  margin: 0 2px;
-  border: 1px solid #ddd;
-  background-color: #fff;
-  color: #333;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-#pagination a.page-btn:hover,
-#pagination a.page-number:hover:not(.active) {
-  background-color: #f8f9fa;
-  border-color: #007bff;
-  color: #007bff;
-  transform: translateY(-1px);
-}
-
-#pagination a.page-number.active {
-  background-color: #007bff;
-  border-color: #007bff;
-  color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
-}
-
-#pagination a.page-btn:disabled,
-#pagination a.page-btn[style*="opacity: 0.5"] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background-color: #f5f5f5;
-  color: #999;
-  border-color: #e9ecef;
-}
-
-#pagination a.page-btn:disabled:hover,
-#pagination a.page-btn[style*="opacity: 0.5"]:hover {
-  background-color: #f5f5f5;
-  border-color: #e9ecef;
-  color: #999;
-  transform: none;
-}
-
-.ellipsis {
-  padding: 8px 4px;
-  color: #999;
-  font-size: 14px;
-  user-select: none;
-}
 
 /* Responsive cho mobile */
 @media (max-width: 768px) {

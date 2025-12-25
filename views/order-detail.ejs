@@ -4,337 +4,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
+    <title><%= title %></title>
     <link rel="stylesheet" href="/style/header.css">
     <link rel="stylesheet" href="/style/footer.css">
     <link rel="stylesheet" href="/style/order-detail.css">
     <link rel="icon" type="image/x-icon" href="/image/logo/favicon.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-
     <style>
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+        /* GIỮ NGUYÊN CSS CŨ CHO INFO CARD & GRID */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .info-card { background: #fff; padding: 20px; border-radius: 4px; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05); }
+        .info-card h3 { font-size: 16px; margin-bottom: 15px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .detail-items { background: #fff; border-radius: 4px; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05); margin-bottom: 20px; }
+        @media (max-width: 768px) { .info-grid { grid-template-columns: 1fr; } }
+        
+        /* STYLE CHO BADGE TRẠNG THÁI */
+        .badge { font-weight: bold; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+        .badge.paid { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .badge.pending { color: #856404; background-color: #fff3cd; border: 1px solid #ffeeba; }
+        .badge.failed { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+
+        .actions-right { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px dashed #e0e0e0; }
+        
+        /* Button Styles */
+        .btn-primary-detail { 
+            background: #ee4d2d; color: #fff; border: 1px solid #ee4d2d; 
+            padding: 10px 40px; border-radius: 4px; cursor: pointer; 
+            font-size: 14px; min-width: 150px; text-decoration: none; 
+            display: inline-block; text-align: center; 
+        }
+        
+        /* [UPDATED] Nút Quay lại / Outline */
+        .btn-outline-detail { 
+            background: #fff; color: #555; border: 1px solid #ddd; 
+            padding: 10px 20px; border-radius: 4px; cursor: pointer; 
+            text-decoration: none; display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-detail:hover {
+            background: #f8f8f8; border-color: #7a7171; color: #333;
         }
 
-        .info-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
+        /* [UPDATED] Nút Hủy Đơn Hàng (Màu Đỏ) */
+        .btn-cancel-detail { 
+            background: #fff; color: #dc3545; border: 1px solid #dc3545; 
+            padding: 10px 30px; border-radius: 4px; cursor: pointer; 
+            font-size: 14px; font-weight: 500;
+            transition: all 0.3s ease; 
+        }
+        .btn-cancel-detail:hover {
+            background: #dc3545; color: #fff; 
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
         }
 
-        .info-card h3 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: #333;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
+        .payment-method-icon img { vertical-align: middle; margin-right: 5px; }
 
-        .detail-items {
-            background: #fff;
-            border-radius: 4px;
-            box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Style cho trạng thái thanh toán */
-        .badge {
-            font-weight: bold;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .badge.paid {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
-
-        .badge.pending {
-            color: #856404;
-            background-color: #fff3cd;
-            border: 1px solid #ffeeba;
-        }
-
-        .badge.failed {
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-
-        .actions-right {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px dashed #e0e0e0;
-        }
-
-        .btn-primary-detail {
-            background: #ee4d2d;
-            color: #fff;
-            border: 1px solid #ee4d2d;
-            padding: 10px 40px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            min-width: 150px;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-outline-detail {
-            background: #fff;
-            color: #555;
-            border: 1px solid #ddd;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-cancel-detail {
-            background: #fff;
-            color: #555;
-            border: 1px solid #ddd;
-            padding: 10px 30px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .payment-method-icon img {
-            vertical-align: middle;
-            margin-right: 5px;
-        }
+        /* STEPPER STYLES */
+        .stepper-card { background: #fff; padding: 40px 20px; margin-bottom: 20px; border-radius: 4px; box-shadow: 0 1px 1px 0 rgba(0,0,0,.05); }
+        .stepper { display: flex; justify-content: space-between; position: relative; }
+        .step { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; flex: 1; }
+        .step-icon { width: 50px; height: 50px; border-radius: 50%; background: #fff; border: 4px solid #e0e0e0; color: #ccc; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px; transition: all 0.3s ease; }
+        .step-label { font-size: 14px; color: #999; text-align: center; font-weight: 500; }
+        .step-time { font-size: 12px; color: #aaa; margin-top: 5px; text-align: center; }
+        .step-line { position: absolute; top: 25px; left: -50%; right: 50%; height: 4px; background: #e0e0e0; z-index: 1; }
+        .step.active .step-icon { border-color: #ee4d2d; background: #ee4d2d; color: #fff; transform: scale(1.1); box-shadow: 0 0 10px rgba(238, 77, 45, 0.4); }
+        .step.active .step-label { color: #ee4d2d; font-weight: bold; }
+        .step.completed .step-icon { border-color: #26aa99; background: #fff; color: #26aa99; }
+        .step.completed .step-label { color: #26aa99; }
+        .step-line.completed { background: #26aa99; }
+        .cancel-alert { background-color: #fff4f4; color: #c00; padding: 20px; border-radius: 4px; border: 1px solid #ffcccc; text-align: center; font-weight: bold; font-size: 16px; }
+        .status-text { font-weight: bold; text-transform: uppercase; }
+        .status-text.pending { color: #ffc107; }
+        .status-text.confirmed { color: #17a2b8; }
+        .status-text.shipping { color: #007bff; }
+        .status-text.completed { color: #28a745; }
+        .status-text.cancelled { color: #dc3545; }
     </style>
 </head>
 
 <body>
     <%- include('header') %>
 
-        <div class="container detail-container">
-            <div class="detail-header-card">
-                <a href="/checkout/orders/list" class="back-link"><i class="fas fa-chevron-left"></i> TRỞ LẠI</a>
-                <div class="order-meta">
-                    <span>MÃ ĐƠN HÀNG: #<%= order._id.toString().slice(-6).toUpperCase() %></span>
-                    <span class="divider">|</span>
-                    <span class="status-text <%= order.status %>">
-                        <%= order.status==='pending' ? 'CHỜ XỬ LÝ' : order.status==='preparing' ? 'ĐANG CHUẨN BỊ' :
-                            order.status==='shipping' ? 'ĐANG GIAO' : order.status==='completed' ? 'HOÀN THÀNH' :
-                            order.status==='request_cancel' ? 'YÊU CẦU HỦY' : 'ĐÃ HỦY' %>
-                    </span>
-                </div>
+    <div class="container detail-container">
+        <div class="detail-header-card">
+            <a href="/checkout/orders/list" class="back-link"><i class="fas fa-chevron-left"></i> TRỞ LẠI</a>
+            <div class="order-meta">
+                <span>MÃ ĐƠN HÀNG: #<%= order._id.toString().slice(-6).toUpperCase() %></span>
+                <span class="divider">|</span>
+                <span class="status-text <%= order.status %>">
+                    <%= order.status==='pending' ? 'CHỜ XỬ LÝ' : 
+                        order.status==='confirmed' ? 'ĐÃ XÁC NHẬN' : 
+                        order.status==='shipping' ? 'ĐANG GIAO HÀNG' : 
+                        order.status==='completed' ? 'HOÀN THÀNH' : 
+                        order.status==='request_cancel' ? 'YÊU CẦU HỦY' : 'ĐÃ HỦY' %>
+                </span>
             </div>
+        </div>
 
-            <div class="stepper-card">
-                <% const steps=['pending', 'preparing' , 'shipping' , 'completed' ]; const stepNames=['Đã đặt
-                    đơn', 'Đã xác nhận' , 'Đang giao hàng' , 'Đã giao' ]; let currentStep=steps.indexOf(order.status);
-                    if (order.status==='cancelled' ) currentStep=-1; if (order.status==='request_cancel' )
-                    currentStep=0; // Vẫn ở bước đầu nếu đang chờ hủy %>
+        <div class="stepper-card">
+            <% 
+                const steps = ['pending', 'confirmed', 'shipping', 'completed']; 
+                const stepNames = ['Đã Đặt Đơn', 'Đã Xác Nhận', 'Đang Giao Hàng', 'Đã Giao']; 
+                let currentStepIndex = steps.indexOf(order.status);
+                if (order.status === 'cancelled') currentStepIndex = -1; 
+                if (order.status === 'request_cancel') currentStepIndex = 0; 
+            %>
 
-                    <% if (order.status==='cancelled' ) { %>
-                        <div class="cancel-alert">
-                            <i class="fas fa-times-circle"></i> Đơn hàng đã bị hủy vào lúc <%= new
-                                Date(order.updatedAt).toLocaleString('vi-VN') %>
+            <% if (order.status === 'cancelled') { %>
+                <div class="cancel-alert">
+                    <i class="fas fa-times-circle"></i> ĐƠN HÀNG ĐÃ BỊ HỦY VÀO LÚC <%= new Date(order.updatedAt).toLocaleString('vi-VN') %>
+                </div>
+            <% } else { %>
+                <div class="stepper">
+                    <% stepNames.forEach((name, index) => { 
+                        let statusClass = '';
+                        if (index < currentStepIndex) statusClass = 'completed'; 
+                        else if (index === currentStepIndex) statusClass = 'active'; 
+                        let iconClass = 'fa-circle';
+                        if (index === 0) iconClass = 'fa-file-alt';
+                        else if (index === 1) iconClass = 'fa-clipboard-check';
+                        else if (index === 2) iconClass = 'fa-truck';
+                        else if (index === 3) iconClass = 'fa-check-circle';
+                    %>
+                        <div class="step <%= statusClass %>">
+                            <% if (index > 0) { %>
+                                <div class="step-line <%= index <= currentStepIndex ? 'completed' : '' %>"></div>
+                            <% } %>
+                            <div class="step-icon"><i class="fas <%= iconClass %>"></i></div>
+                            <div class="step-label"><%= name %></div>
+                            <% if (index === 0 && currentStepIndex >= 0) { %>
+                                <div class="step-time"><%= new Date(order.createdAt).toLocaleDateString('vi-VN') %></div>
+                            <% } %>
                         </div>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card address-card">
+                <h3><i class="fas fa-map-marker-alt"></i> Địa chỉ nhận hàng</h3>
+                <div class="info-content">
+                    <p class="customer-name" style="font-weight: bold;"><%= order.shippingAddress.fullName %></p>
+                    <p class="customer-phone" style="color: #555;">(+84) <%= order.shippingAddress.phone %></p>
+                    <p class="customer-address" style="color: #777; font-size: 14px;"><%= order.shippingAddress.address %></p>
+                </div>
+            </div>
+
+            <div class="info-card payment-card">
+                <h3><i class="fas fa-credit-card"></i> Thông tin thanh toán</h3>
+                <div class="info-content">
+                    <p class="payment-method-icon"><strong>Phương thức:</strong>
+                        <% if (order.paymentMethod === 'cod') { %>
+                            <img src="/image/icon/cod.png" width="20"> Thanh toán khi nhận hàng (COD)
+                        <% } else if (order.paymentMethod === 'vnpay') { %>
+                            <img src="/image/icon/vnpay.png" width="35"> Thanh toán qua Ví VNPay / Thẻ ATM
                         <% } else { %>
-                            <div class="stepper">
-                                <% stepNames.forEach((name, index)=> {
-                                    let active = index <= currentStep ? 'active' : '' ; %>
-                                        <div class="step <%= active %>">
-                                            <div class="step-icon"><i
-                                                    class="fas <%= index===0?'fa-file-alt':index===1?'fa-box-open':index===2?'fa-truck':'fa-star' %>"></i>
-                                            </div>
-                                            <div class="step-label">
-                                                <%= name %>
-                                            </div>
-                                            <% if (index <=currentStep && index===0) { %>
-                                                <div class="step-time">
-                                                    <%= new Date(order.createdAt).toLocaleDateString('vi-VN') %>
-                                                </div>
-                                                <% } %>
-                                        </div>
-                                        <% if (index < stepNames.length - 1) { %>
-                                            <div class="step-line <%= index < currentStep ? 'active' : '' %>"></div>
-                                            <% } %>
-                                                <% }) %>
-                            </div>
-                            <% } %>
-            </div>
-
-            <div class="info-grid">
-                <div class="info-card address-card">
-                    <h3><i class="fas fa-map-marker-alt"></i> Địa chỉ nhận hàng</h3>
-                    <div class="info-content">
-                        <p class="customer-name" style="font-weight: bold;">
-                            <%= order.shippingAddress.fullName %>
-                        </p>
-                        <p class="customer-phone" style="color: #555;">(+84) <%= order.shippingAddress.phone %>
-                        </p>
-                        <p class="customer-address" style="color: #777; font-size: 14px;">
-                            <%= order.shippingAddress.address %><br>
-                                <%= order.shippingAddress.ward %>, <%= order.shippingAddress.district %>, <%=
-                                            order.shippingAddress.province %>
-                        </p>
-                    </div>
-                </div>
-
-                <div class="info-card payment-card">
-                    <h3><i class="fas fa-credit-card"></i> Thông tin thanh toán</h3>
-                    <div class="info-content">
-                        <p class="payment-method-icon"><strong>Phương thức:</strong>
-                            <% if(order.paymentMethod==='cod' ) { %>
-                                <img src="/image/icon/cod.png" width="20"> Thanh toán khi nhận hàng (COD)
-                                <% } else if(order.paymentMethod==='vnpay' ) { %>
-                                    <img src="/image/icon/vnpay.png" width="35"> Thanh toán qua Ví VNPay / Thẻ ATM
-                                    <% } else { %>
-                                        Chuyển khoản ngân hàng
-                                        <% } %>
-                        </p>
-                        <p><strong>Trạng thái:</strong>
-                            <span class="badge <%= order.paymentStatus %>">
-                                <%= order.paymentStatus==='paid' ? 'Đã thanh toán' : order.paymentStatus==='failed'
-                                    ? 'Thất bại' : 'Chưa thanh toán' %>
-                            </span>
-                        </p>
-                        <% if(order.note) { %>
-                            <div
-                                style="margin-top: 10px; padding: 10px; background: #fafafa; border: 1px dashed #ccc; font-size: 13px;">
-                                <strong>Ghi chú:</strong>
-                                <%= order.note %>
-                            </div>
-                            <% } %>
-                    </div>
-                </div>
-            </div>
-
-            <div class="detail-items">
-                <div class="prod-header">
-                    <div>Sản phẩm</div>
-                    <div class="text-center">Đơn giá</div>
-                    <div class="text-center">Số lượng</div>
-                    <div class="text-right">Thành tiền</div>
-                </div>
-
-                <% order.items.forEach(item=> { %>
-                    <% if (item.productId) { %>
-                        <div class="prod-item">
-                            <div class="prod-info">
-                                <a href="/products/<%= item.productId %>">
-                                    <img src="<%= item.image %>" alt="<%= item.name %>">
-                                </a>
-                                <div class="prod-meta">
-                                    <a href="/products/<%= item.productId %>"
-                                        style="text-decoration: none; color: inherit;">
-                                        <span class="prod-name">
-                                            <%= item.name %>
-                                        </span>
-                                    </a>
-                                    <a href="/products/<%= item.productId %>" class="buy-again">Mua lại</a>
-                                </div>
-                            </div>
-                            <div class="text-center">₫<%= item.price.toLocaleString('vi-VN') %>
-                            </div>
-                            <div class="text-center">x<%= item.quantity %>
-                            </div>
-                            <div class="text-right highlight">₫<%= (item.price * item.quantity).toLocaleString('vi-VN')
-                                    %>
-                            </div>
+                            Chuyển khoản ngân hàng
+                        <% } %>
+                    </p>
+                    <p><strong>Trạng thái:</strong>
+                        <span class="badge <%= order.paymentStatus %>">
+                            <%= order.paymentStatus === 'paid' ? 'Đã thanh toán' : order.paymentStatus === 'failed' ? 'Thất bại' : 'Chưa thanh toán' %>
+                        </span>
+                    </p>
+                    <% if (order.note) { %>
+                        <div style="margin-top: 10px; padding: 10px; background: #fafafa; border: 1px dashed #ccc; font-size: 13px;">
+                            <strong>Ghi chú:</strong> <%= order.note %>
                         </div>
-                        <% } else { %>
-                            <div class="prod-item">
-                                <div class="prod-info">
-                                    <img src="/image/icon/no-image.png" alt="Deleted">
-                                    <div class="prod-meta"><span style="color:#999">
-                                            <%= item.name %> (Ngừng kinh doanh)
-                                        </span></div>
-                                </div>
-                                <div class="text-center">₫<%= item.price.toLocaleString('vi-VN') %>
-                                </div>
-                                <div class="text-center">x<%= item.quantity %>
-                                </div>
-                                <div class="text-right">₫<%= (item.price * item.quantity).toLocaleString('vi-VN') %>
-                                </div>
-                            </div>
-                            <% } %>
-                                <% }) %>
-            </div>
-
-            <div class="summary-card">
-                <div class="row">
-                    <span>Tổng tiền hàng</span>
-                    <span>₫<%= order.totalPrice.toLocaleString('vi-VN') %></span>
-                </div>
-                <div class="row">
-                    <span>Phí vận chuyển</span>
-                    <span>Miễn phí</span>
-                </div>
-                <div class="row total">
-                    <span>Tổng số tiền</span>
-                    <span class="big-price">₫<%= order.totalPrice.toLocaleString('vi-VN') %></span>
-                </div>
-
-                <div class="actions-right">
-                    <% if (order.status==='pending' ) { %>
-                        <button class="btn-cancel-detail" onclick="cancelDetail('<%= order._id %>')">Hủy Đơn
-                            Hàng</button>
-                        <% } else if (order.status==='request_cancel' ) { %>
-                            <button class="btn-outline-detail" disabled
-                                style="background: #eee; cursor: not-allowed;">Đang chờ duyệt hủy</button>
-                            <% } else { %>
-                                <button class="btn-outline-detail" onclick="alert('Hotline hỗ trợ: 1900 xxxx')">Liên Hệ
-                                    Hỗ Trợ</button>
-                                <a href="/products" class="btn-primary-detail">Mua Lại</a>
-                                <% } %>
+                    <% } %>
                 </div>
             </div>
         </div>
 
-        <footer>
-            <div class="footer-bottom">
-                <p>© 2025 Xe Đạp Beru Bike</p>
+        <div class="detail-items">
+            <div class="prod-header" style="display: flex; padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; color: #777;">
+                <div style="flex: 2;">Sản phẩm</div>
+                <div style="flex: 1; text-align: center;">Đơn giá</div>
+                <div style="flex: 1; text-align: center;">Số lượng</div>
+                <div style="flex: 1; text-align: right;">Thành tiền</div>
             </div>
-        </footer>
 
-        <script>
-            async function cancelDetail(id) {
-                if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')) {
-                    try {
-                        const res = await fetch('/checkout/orders/cancel/' + id, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
-                        });
+            <% order.items.forEach(item => { %>
+                <div class="prod-item" style="display: flex; padding: 15px; border-bottom: 1px solid #f5f5f5; align-items: center;">
+                    <div class="prod-info" style="flex: 2; display: flex; gap: 10px; align-items: center;">
+                        <a href="<%= item.productId ? '/products/' + item.productId : '#' %>">
+                            <img src="<%= item.image %>" style="width: 60px; height: 60px; object-fit: cover; border: 1px solid #eee;" alt="<%= item.name %>">
+                        </a>
+                        <div class="prod-meta">
+                            <a href="<%= item.productId ? '/products/' + item.productId : '#' %>" style="text-decoration: none; color: inherit; font-weight: 500;">
+                                <%= item.name %>
+                            </a>
+                            <% if (!item.productId) { %>
+                                <span style="color: #999; font-size: 12px; display: block;">(Sản phẩm ngừng kinh doanh)</span>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div style="flex: 1; text-align: center;">₫<%= item.price.toLocaleString('vi-VN') %></div>
+                    <div style="flex: 1; text-align: center;">x<%= item.quantity %></div>
+                    <div style="flex: 1; text-align: right; color: #ee4d2d; font-weight: bold;">₫<%= (item.price * item.quantity).toLocaleString('vi-VN') %></div>
+                </div>
+            <% }) %>
+        </div>
 
-                        const data = await res.json();
+        <div class="summary-card" style="background: #fff; padding: 20px; text-align: right;">
+            <div class="row" style="margin-bottom: 5px;">
+                <span style="color: #777;">Tổng tiền hàng:</span>
+                <span style="margin-left: 10px;">₫<%= order.totalPrice.toLocaleString('vi-VN') %></span>
+            </div>
+            <div class="row" style="margin-bottom: 10px;">
+                <span style="color: #777;">Phí vận chuyển:</span>
+                <span style="margin-left: 10px;">Miễn phí</span>
+            </div>
+            <div class="row total" style="border-top: 1px dashed #ddd; padding-top: 10px;">
+                <span style="font-size: 16px;">Tổng số tiền:</span>
+                <span class="big-price" style="font-size: 20px; color: #ee4d2d; font-weight: bold; margin-left: 10px;">₫<%= order.totalPrice.toLocaleString('vi-VN') %></span>
+            </div>
 
-                        if (data.success) {
-                            alert(data.message);
-                            window.location.reload();
-                        } else {
-                            alert(data.message || "Không thể hủy đơn hàng.");
-                        }
-                    } catch (error) {
-                        console.error(error);
-                        alert("Lỗi kết nối server.");
+            <div class="actions-right">
+                <a href="/checkout/orders/list" class="btn-outline-detail" style="margin-right: 10px;">Quay lại</a>
+
+                <% if (order.status === 'pending') { %>
+                    <button class="btn-cancel-detail" onclick="cancelDetail('<%= order._id %>')">Hủy Đơn Hàng</button>
+                <% } else if (order.status === 'request_cancel') { %>
+                    <button class="btn-outline-detail" disabled style="background: #eee; cursor: not-allowed; border: none;">Đang chờ duyệt hủy</button>
+                <% } else if (order.status === 'completed') { %>
+                    <a href="/products" class="btn-primary-detail">Mua Lại</a>
+                <% } else { %>
+                    <button class="btn-outline-detail" onclick="alert('Vui lòng liên hệ hotline 1900 xxxx để được hỗ trợ')">Liên Hệ Hỗ Trợ</button>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-bottom">
+            <p>© 2025 Xe Đạp Beru Bike</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentStatus = urlParams.get('payment');
+            if (paymentStatus === 'success') {
+                alert("🎉 Thanh toán VNPay thành công! Cảm ơn bạn đã mua hàng.");
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else if (paymentStatus === 'failed') {
+                alert("⚠️ Thanh toán VNPay thất bại hoặc bị hủy. Vui lòng thử lại.");
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+
+        async function cancelDetail(id) {
+            if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')) {
+                try {
+                    const res = await fetch('/checkout/orders/cancel/' + id, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        alert(data.message);
+                        window.location.reload();
+                    } else {
+                        alert(data.message || "Không thể hủy đơn hàng.");
                     }
+                } catch (error) {
+                    console.error(error);
+                    alert("Lỗi kết nối server.");
                 }
             }
-        </script>
+        }
+    </script>
 </body>
-
 </html>

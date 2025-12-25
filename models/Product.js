@@ -52,7 +52,7 @@ const productSchema = new mongoose.Schema({
       "xe đạp địa hình",
       "xe đạp đua",
       "xe đạp thể thao",
-      "xe đạp đô thị"
+      "xe đạp đường phố"
     ]
   },
   

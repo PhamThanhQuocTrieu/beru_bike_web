@@ -1,277 +1,366 @@
 /* =========================================
        VARIABLES & GLOBAL
        ========================================= */
-    :root {
-        --primary-color: #28a745;
-        --primary-dark: #218838;       
-        --text-color: #333;            
-        --text-light: #666;            
-        --bg-light: #f8f9fa;           
-        --border-color: #e9ecef;       
-        --white: #ffffff;
-        --shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        --radius: 8px;                 
-    }
+:root {
+    --primary-color: #28a745;
+    --primary-dark: #218838;
+    --text-color: #333;
+    --text-light: #666;
+    --bg-light: #f8f9fa;
+    --border-color: #e9ecef;
+    --white: #ffffff;
+    --shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    --radius: 8px;
+}
 
-    body {
-        background-color: #f4f6f8;
-    }
+body {
+    background-color: #f4f6f8;
+}
 
-    /* =========================================
+/* =========================================
        THANH TIẾN TRÌNH (TEXT ONLY)
        ========================================= */
-    .checkout-progress {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px; /* Khoảng cách giữa các mục */
-        margin-bottom: 40px;
-    }
+.checkout-progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    /* Khoảng cách giữa các mục */
+    margin-bottom: 40px;
+}
 
-    .progress-step {
-        font-size: 16px;
-        font-weight: 600;
-        color: #999; /* Màu xám cho các bước đã qua/chưa tới */
-        cursor: default;
-        display: flex;
-        align-items: center;
-    }
+.progress-step {
+    font-size: 16px;
+    font-weight: 600;
+    color: #999;
+    /* Màu xám cho các bước đã qua/chưa tới */
+    cursor: default;
+    display: flex;
+    align-items: center;
+}
 
-    /* Bước hiện tại (Hoàn tất) */
-    .progress-step.active {
-        color: var(--primary-color);
-        font-weight: 700;
-    }
+/* Bước hiện tại (Hoàn tất) */
+.progress-step.active {
+    color: var(--primary-color);
+    font-weight: 700;
+}
 
-    /* Tạo dấu mũi tên ngăn cách (›) bằng CSS */
-    .progress-step:not(:last-child)::after {
-        content: "›";
-        font-size: 24px;
-        color: #ccc;
-        margin-left: 15px; /* Khoảng cách từ chữ đến dấu mũi tên */
-        font-weight: 400;
-        margin-top: -2px; /* Căn chỉnh lại độ cao một chút */
-    }
+/* Tạo dấu mũi tên ngăn cách (›) bằng CSS */
+.progress-step:not(:last-child)::after {
+    content: "›";
+    font-size: 24px;
+    color: #ccc;
+    margin-left: 15px;
+    /* Khoảng cách từ chữ đến dấu mũi tên */
+    font-weight: 400;
+    margin-top: -2px;
+    /* Căn chỉnh lại độ cao một chút */
+}
 
-    /* =========================================
+/* =========================================
        LAYOUT
        ========================================= */
-    .checkout {
-        display: flex;
-        gap: 30px;
-        margin-top: 30px;
-        margin-bottom: 50px;
-        align-items: flex-start;
-    }
+.checkout {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    align-items: flex-start;
+}
 
-    .checkout-left { flex: 1; }
-    .checkout-right { width: 380px; flex-shrink: 0; }
+.checkout-left {
+    flex: 1;
+}
 
-    .box {
-        background: var(--white);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        padding: 30px;
-        margin-bottom: 20px;
-    }
+.checkout-right {
+    width: 380px;
+    flex-shrink: 0;
+}
 
-    /* =========================================
+.box {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+/* =========================================
        SUCCESS BOX
        ========================================= */
-    .success-box {
-        text-align: center;
-        border-top: 5px solid var(--primary-color);
+.success-box {
+    text-align: center;
+    border-top: 5px solid var(--primary-color);
+}
+
+.success-icon {
+    margin-bottom: 20px;
+    animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
     }
 
-    .success-icon {
-        margin-bottom: 20px;
-        animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    80% {
+        transform: scale(1.1);
+        opacity: 1;
     }
 
-    @keyframes popIn {
-        0% { transform: scale(0); opacity: 0; }
-        80% { transform: scale(1.1); opacity: 1; }
-        100% { transform: scale(1); }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.success-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.success-message {
+    font-size: 16px;
+    color: var(--text-light);
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+/* =========================================
+       ORDER DETAILS
+       ========================================= */
+.order-details {
+    background-color: var(--bg-light);
+    border: 1px dashed var(--primary-color);
+    padding: 25px;
+    border-radius: var(--radius);
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.order-details h3 {
+    font-size: 18px;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.order-details h3 strong {
+    color: var(--primary-color);
+    font-family: monospace;
+    font-size: 20px;
+}
+
+.order-details p {
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-size: 15px;
+}
+
+.order-details p i {
+    color: var(--text-light);
+    margin-right: 8px;
+    width: 20px;
+    text-align: center;
+}
+
+.order-details a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.order-details a:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+       BUTTONS
+       ========================================= */
+.success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-buy,
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.btn-buy {
+    background-color: var(--text-color);
+    color: var(--white);
+    border: 2px solid var(--text-color);
+}
+
+.btn-buy:hover {
+    background-color: var(--white);
+    color: var(--text-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background-color: var(--white);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+}
+
+/* =========================================
+       RIGHT COLUMN
+       ========================================= */
+.order-summary h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    color: var(--text-light);
+    font-size: 15px;
+}
+
+.summary-divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 15px 0;
+}
+
+.total-row {
+    font-weight: 700;
+    color: var(--text-color);
+    font-size: 18px;
+}
+
+.total-amount {
+    color: #d0011b;
+    font-size: 20px;
+}
+
+.trust-badges {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    background: #e8f5e9;
+    color: var(--primary-dark);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Container chứa 2 nút để canh chỉnh đẹp hơn */
+.success-actions {
+    display: flex;
+    gap: 20px;
+    /* Khoảng cách giữa 2 nút */
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* Style cho nút Back (Tiếp tục mua sắm) */
+.btn-back {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: transparent;
+    /* Nền trong suốt */
+    border: 2px solid #555;
+    /* Viền màu xám đậm */
+    color: #555;
+    /* Chữ màu xám đậm */
+    border-radius: 50px;
+    /* Bo tròn mềm mại */
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    /* Hiệu ứng mượt mà */
+    cursor: pointer;
+}
+
+/* Hiệu ứng khi di chuột vào */
+.btn-back:hover {
+    background-color: #555;
+    color: #fff;
+    /* Chữ chuyển sang trắng */
+    transform: translateY(-2px);
+    /* Nút nổi lên nhẹ */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.badge i {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+/* =========================================
+       RESPONSIVE
+       ========================================= */
+@media (max-width: 992px) {
+    .checkout {
+        flex-direction: column;
+    }
+
+    .checkout-right {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .success-actions {
+        flex-direction: column;
+    }
+
+    .btn-buy,
+    .btn-secondary {
+        width: 100%;
     }
 
     .success-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 10px;
+        font-size: 24px;
     }
 
-    .success-message {
-        font-size: 16px;
-        color: var(--text-light);
-        margin-bottom: 30px;
-        line-height: 1.5;
+    .checkout-progress {
+        gap: 5px;
     }
 
-    /* =========================================
-       ORDER DETAILS
-       ========================================= */
-    .order-details {
-        background-color: var(--bg-light);
-        border: 1px dashed var(--primary-color);
-        padding: 25px;
-        border-radius: var(--radius);
-        margin-bottom: 30px;
-        text-align: left;
-    }
-
-    .order-details h3 {
-        font-size: 18px;
-        color: var(--text-color);
-        margin-bottom: 15px;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 10px;
-    }
-
-    .order-details h3 strong {
-        color: var(--primary-color);
-        font-family: monospace;
-        font-size: 20px;
-    }
-
-    .order-details p {
-        margin-bottom: 10px;
-        color: var(--text-color);
-        font-size: 15px;
-    }
-
-    .order-details p i {
-        color: var(--text-light);
-        margin-right: 8px;
-        width: 20px;
-        text-align: center;
-    }
-
-    .order-details a {
-        color: var(--primary-color);
-        font-weight: 600;
-        text-decoration: none;
-    }
-
-    .order-details a:hover { text-decoration: underline; }
-
-    /* =========================================
-       BUTTONS
-       ========================================= */
-    .success-actions {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-    }
-
-    .btn-buy, .btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 25px;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 15px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        min-width: 180px;
-    }
-
-    .btn-buy {
-        background-color: var(--text-color);
-        color: var(--white);
-        border: 2px solid var(--text-color);
-    }
-
-    .btn-buy:hover {
-        background-color: var(--white);
-        color: var(--text-color);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    .btn-secondary {
-        background-color: var(--white);
-        color: var(--primary-color);
-        border: 2px solid var(--primary-color);
-    }
-
-    .btn-secondary:hover {
-        background-color: var(--primary-color);
-        color: var(--white);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
-    }
-
-    /* =========================================
-       RIGHT COLUMN
-       ========================================= */
-    .order-summary h3 {
-        font-size: 18px;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .summary-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 15px;
-        color: var(--text-light);
-        font-size: 15px;
-    }
-
-    .summary-divider {
-        height: 1px;
-        background-color: var(--border-color);
-        margin: 15px 0;
-    }
-
-    .total-row {
-        font-weight: 700;
-        color: var(--text-color);
-        font-size: 18px;
-    }
-
-    .total-amount {
-        color: #d0011b;
-        font-size: 20px;
-    }
-
-    .trust-badges {
-        margin-top: 25px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .badge {
-        display: flex;
-        align-items: center;
-        background: #e8f5e9;
-        color: var(--primary-dark);
-        padding: 10px;
-        border-radius: 6px;
+    /* Thu nhỏ khoảng cách trên mobile */
+    .progress-step {
         font-size: 14px;
-        font-weight: 500;
     }
 
-    .badge i { margin-right: 10px; font-size: 16px; }
-
-    /* =========================================
-       RESPONSIVE
-       ========================================= */
-    @media (max-width: 992px) {
-        .checkout { flex-direction: column; }
-        .checkout-right { width: 100%; }
+    .progress-step:not(:last-child)::after {
+        margin-left: 5px;
+        font-size: 18px;
     }
-
-    @media (max-width: 576px) {
-        .success-actions { flex-direction: column; }
-        .btn-buy, .btn-secondary { width: 100%; }
-        .success-title { font-size: 24px; }
-        
-        .checkout-progress { gap: 5px; } /* Thu nhỏ khoảng cách trên mobile */
-        .progress-step { font-size: 14px; }
-        .progress-step:not(:last-child)::after { margin-left: 5px; font-size: 18px; }
-    }
+}

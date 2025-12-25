@@ -15,8 +15,9 @@
 
     /* Container chính */
     .profile-wrapper {
-      max-width: 1200px;
-      margin: 30px auto;
+      /* padding-top: 999px ; */
+      max-width: 1250px;
+      margin: 120px auto;
       padding: 0 15px;
       display: flex;
       gap: 20px;
@@ -172,7 +173,7 @@
 
     .input-wrapper {
       flex: 1;
-      max-width: 400px;
+      max-width: 250px;
       position: relative;
     }
 
@@ -297,6 +298,8 @@
       color: #999;
     }
     .eye-toggle:hover { color: #555; }
+
+    
 
     @media (max-width: 992px) {
       .profile-layout { flex-direction: column-reverse; gap: 30px; }
